@@ -30,8 +30,8 @@ class ViewController: UIViewController {
         picker.isAllowCropper = false
         picker.isAllowCaputreVideo = true
         picker.isAllowTakePhoto = true
-        picker.isAllowShowLive = false
-        picker.isAllowShowGif = false
+        picker.isAllowShowLive = true
+        picker.isAllowShowGif = true
         picker.isShowSelectCount = true
         picker.maxSelected = 5
         picker.rowImageCount = 7
@@ -39,10 +39,12 @@ class ViewController: UIViewController {
         present(navi, animated: true, completion: nil)
         
         //  选择资源的回调
-        picker.selectAssetsCallback = { selectAssets, assetTypeSet, isSelected in
+        picker.selectAssetsCallback = { selectAssets, assetTypeSet, isOriginal in
             for asset in selectAssets {
                 print(asset)
             }
+            print(assetTypeSet.first.debugDescription)
+            print(isOriginal)
         }
         
         //  拍照的回调

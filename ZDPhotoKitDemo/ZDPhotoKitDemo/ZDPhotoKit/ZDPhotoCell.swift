@@ -394,12 +394,12 @@ class ZDPhotoCell: UICollectionViewCell {
         
         if longPress.state == .began {
             ZDPhotoManager.default.getGif(asset: asset.asset, callback: { (data, image) in
-                self.imageView.image = nil
+                //self.imageView.image = nil
                 self.imageView.image = image
             })
         }else if longPress.state == .ended {
             ZDPhotoManager.default.getGif(asset: asset.asset, callback: { (data, image) in
-                self.imageView.image = nil
+                //self.imageView.image = nil
                 self.imageView.image = image?.images?.first
             })
         }
