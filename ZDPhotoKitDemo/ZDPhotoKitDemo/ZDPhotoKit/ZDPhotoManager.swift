@@ -31,11 +31,14 @@ class ZDPhotoManager {
     /// 允许进行剪裁
     var isAllowCropper = false
     
-    /// 允许展示Live图效果
-    var isAllowShowLive = true
+    /// 相册页面允许展示Live图效果
+    var isAllowShowLive = false
+    
+    /// 相册页面允许展示Gif图效果
+    var isAllowShowGif = false
     
     /// 允许展示资源的顺序数字
-    var isShowSelectCount = true
+    var isShowSelectCount = false
     
     /// 是否发布
     var isPublish = false
@@ -494,7 +497,7 @@ class ZDPhotoManager {
         alertController.addAction(cancelAction)
         controller.present(alertController, animated: true, completion: nil)
         */
-        SwiftProgressHUD.showOnlyText(title)
+        SwiftProgressHUD.show(title, type: .info, autoClear: true, autoClearTime: 1.5)
     }
 }
 

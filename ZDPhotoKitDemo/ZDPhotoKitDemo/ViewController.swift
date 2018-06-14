@@ -31,8 +31,9 @@ class ViewController: UIViewController {
         picker.isAllowCaputreVideo = true
         picker.isAllowTakePhoto = true
         picker.isAllowShowLive = false
+        picker.isAllowShowGif = false
         picker.isShowSelectCount = true
-        picker.maxSelected = 9
+        picker.maxSelected = 5
         picker.rowImageCount = 7
         let navi = UINavigationController(rootViewController: picker)
         present(navi, animated: true, completion: nil)

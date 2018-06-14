@@ -50,7 +50,7 @@ public class SwiftProgressHUD {
     
     /// Wait for loading with text
     @discardableResult
-    public class func showWaitWithText(_ text: String, autoClear: Bool = false, autoClearTime: Int = 3, runable: (() -> ())? = nil) -> UIWindow? {
+    public class func showWaitWithText(_ text: String, autoClear: Bool = false, autoClearTime: Double = 3, runable: (() -> ())? = nil) -> UIWindow? {
         if let _ = UIApplication.shared.keyWindow {
             return SwiftProgress.showWaitWithText(text, autoClear: autoClear, autoClearTime: autoClearTime, runable: runable)
         }
@@ -59,7 +59,7 @@ public class SwiftProgressHUD {
     
     /// Success
     @discardableResult
-    public class func showSuccess(_ text: String, autoClear: Bool = true, autoClearTime: Int = 3, runable: (() -> ())? = nil) -> UIWindow? {
+    public class func showSuccess(_ text: String, autoClear: Bool = true, autoClearTime: Double = 3, runable: (() -> ())? = nil) -> UIWindow? {
         if let _ = UIApplication.shared.keyWindow {
             return SwiftProgress.showNoticeWithText(SwiftProgressHUDType.success, text: text, autoClear: autoClear, autoClearTime: autoClearTime, runable: runable)
         }
@@ -68,7 +68,7 @@ public class SwiftProgressHUD {
     
     /// Fail
     @discardableResult
-    public class func showFail(_ text: String, autoClear: Bool = true, autoClearTime: Int = 3, runable: (() -> ())? = nil) -> UIWindow? {
+    public class func showFail(_ text: String, autoClear: Bool = true, autoClearTime: Double = 3, runable: (() -> ())? = nil) -> UIWindow? {
         if let _ = UIApplication.shared.keyWindow {
             return SwiftProgress.showNoticeWithText(SwiftProgressHUDType.fail, text: text, autoClear: autoClear, autoClearTime: autoClearTime, runable: runable)
         }
@@ -77,7 +77,7 @@ public class SwiftProgressHUD {
     
     /// Hint information
     @discardableResult
-    public class func showInfo(_ text: String, autoClear: Bool = true, autoClearTime: Int = 3, runable: (() -> ())? = nil) -> UIWindow? {
+    public class func showInfo(_ text: String, autoClear: Bool = true, autoClearTime: Double = 3, runable: (() -> ())? = nil) -> UIWindow? {
         if let _ = UIApplication.shared.keyWindow {
             return SwiftProgress.showNoticeWithText(SwiftProgressHUDType.info, text: text, autoClear: autoClear, autoClearTime: autoClearTime, runable: runable)
         }
@@ -86,7 +86,7 @@ public class SwiftProgressHUD {
     
     /// Prompt free type
     @discardableResult
-    public class func show(_ text: String, type: SwiftProgressHUDType, autoClear: Bool, autoClearTime: Int = 3, runable: (() -> ())? = nil) -> UIWindow? {
+    public class func show(_ text: String, type: SwiftProgressHUDType, autoClear: Bool, autoClearTime: Double = 3, runable: (() -> ())? = nil) -> UIWindow? {
         if let _ = UIApplication.shared.keyWindow {
             return SwiftProgress.showNoticeWithText(type, text: text, autoClear: autoClear, autoClearTime: autoClearTime, runable: runable)
         }
@@ -104,7 +104,7 @@ public class SwiftProgressHUD {
     
     /// Status bar prompt
     @discardableResult
-    public class func showOnNavigation(_ text: String, autoClear: Bool = true, autoClearTime: Int = 1, textColor: UIColor = UIColor.black, fontSize:CGFloat = 13, backgroundColor: UIColor = UIColor.white, runable: (() -> ())? = nil) -> UIWindow? {
+    public class func showOnNavigation(_ text: String, autoClear: Bool = true, autoClearTime: Double = 1, textColor: UIColor = UIColor.black, fontSize:CGFloat = 13, backgroundColor: UIColor = UIColor.white, runable: (() -> ())? = nil) -> UIWindow? {
         if let _ = UIApplication.shared.keyWindow {
             
             return SwiftProgress.noticeOnNavigationBar(text, autoClear: autoClear, autoClearTime: autoClearTime, textColor: textColor, fontSize: fontSize, backgroundColor: backgroundColor, runable: runable)
@@ -156,7 +156,7 @@ class SwiftProgress: NSObject {
     }
     
     @discardableResult
-    static func noticeOnNavigationBar(_ text: String, autoClear: Bool, autoClearTime: Int, textColor: UIColor, fontSize:CGFloat, backgroundColor: UIColor, runable: (() -> ())? = nil) -> UIWindow{
+    static func noticeOnNavigationBar(_ text: String, autoClear: Bool, autoClearTime: Double, textColor: UIColor, fontSize:CGFloat, backgroundColor: UIColor, runable: (() -> ())? = nil) -> UIWindow{
         let statusBarFrame = UIApplication.shared.statusBarFrame
         let frame = CGRect(x: 0, y: 0, width: statusBarFrame.width, height: (statusBarFrame.height + 44))
         let window = UIWindow()
@@ -205,7 +205,7 @@ class SwiftProgress: NSObject {
         }, completion: { b in
             if autoClear {
                 
-                DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + .seconds(autoClearTime), execute: {
+                DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + autoClearTime, execute: {
                     DispatchQueue.main.async {
                         UIView.animate(withDuration: 0.3, animations: {
                             /// Vanishing animation
@@ -286,7 +286,7 @@ class SwiftProgress: NSObject {
     }
     
     @discardableResult
-    static func showText(_ text: String, autoClear: Bool = true, autoClearTime: Int = 2, runable: (() -> ())? = nil) -> UIWindow {
+    static func showText(_ text: String, autoClear: Bool = true, autoClearTime: Double = 2, runable: (() -> ())? = nil) -> UIWindow {
         let window = UIWindow()
         window.backgroundColor = hudBackgroundColor
         window.rootViewController = UIViewController()
@@ -339,7 +339,7 @@ class SwiftProgress: NSObject {
     }
     
     @discardableResult
-    static func showNoticeWithText(_ type: SwiftProgressHUDType,text: String, autoClear: Bool, autoClearTime: Int, runable: (() -> ())? = nil) -> UIWindow {
+    static func showNoticeWithText(_ type: SwiftProgressHUDType,text: String, autoClear: Bool, autoClearTime: Double, runable: (() -> ())? = nil) -> UIWindow {
         var frame = CGRect(x: 0, y: 0, width: 90, height: 90)
         let window = UIWindow()
         window.backgroundColor = hudBackgroundColor
@@ -426,7 +426,7 @@ class SwiftProgress: NSObject {
     }
     
     @discardableResult
-    static func showWaitWithText(_ text: String, autoClear: Bool, autoClearTime: Int, runable: (() -> ())? = nil) -> UIWindow {
+    static func showWaitWithText(_ text: String, autoClear: Bool, autoClearTime: Double, runable: (() -> ())? = nil) -> UIWindow {
         var frame = CGRect(x: 0, y: 0, width: 90, height: 90)
         let window = UIWindow()
         window.backgroundColor = hudBackgroundColor

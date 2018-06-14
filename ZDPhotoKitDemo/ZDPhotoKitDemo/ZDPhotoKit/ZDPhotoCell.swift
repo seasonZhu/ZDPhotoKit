@@ -126,8 +126,11 @@ class ZDPhotoCell: UICollectionViewCell {
             
             if newValue.subType == .gif {
                 
-                let longTap = UILongPressGestureRecognizer(target: self, action: #selector(gifStart(_ :)))
-                imageView.addGestureRecognizer(longTap)
+                //  允许展示Gif 添加长按手势
+                if ZDPhotoManager.default.isAllowShowGif {
+                    let longTap = UILongPressGestureRecognizer(target: self, action: #selector(gifStart(_ :)))
+                    imageView.addGestureRecognizer(longTap)
+                }
                 
                 ZDPhotoManager.default.getGif(asset: asset, callback: { (data, image) in
                     //self.imageView.animatedImage = FLAnimatedImage(gifData: data)
@@ -136,9 +139,11 @@ class ZDPhotoCell: UICollectionViewCell {
                 })
             }else if newValue.subType == .live {
                 
-                //  添加长按手势
-                let longTap = UILongPressGestureRecognizer(target: self, action: #selector(livePhotoStart(_ :)))
-                livePhoteView.addGestureRecognizer(longTap)
+                //  允许展示LivePhoto 添加长按手势
+                if ZDPhotoManager.default.isAllowShowLive {
+                    let longTap = UILongPressGestureRecognizer(target: self, action: #selector(livePhotoStart(_ :)))
+                    livePhoteView.addGestureRecognizer(longTap)
+                }
                 
                 ZDPhotoManager.default.getLivePhoto(asset: asset, targetSize: CGSize(width: 150, height: 150), callback: { (livePhoto, image, url) in
                     if ZDPhotoManager.default.isAllowShowLive {
@@ -385,14 +390,19 @@ class ZDPhotoCell: UICollectionViewCell {
     /// - Parameter longPress: 长按手势
     @objc private func gifStart(_ longPress: UILongPressGestureRecognizer) {
         
-//        if longPress.state == .began {
-//            imageView.image = gifImage
-//        }else if longPress.state == .ended {
-//            imageView.image = nil
-//            imageView.image = gifImage?.images?.first
-//            //  这里如果设置为nil的话,那么下次再次长按的话 gifImage为空, 就拿不到数据了,最好的方式是每次按,每次生成,然后每次都进行销毁
-//            //gifImage = nil
-//        }
+        //  不使用全局的变量 这样用完了就销毁 内存消耗更少
+        
+        if longPress.state == .began {
+            ZDPhotoManager.default.getGif(asset: asset.asset, callback: { (data, image) in
+                self.imageView.image = nil
+                self.imageView.image = image
+            })
+        }else if longPress.state == .ended {
+            ZDPhotoManager.default.getGif(asset: asset.asset, callback: { (data, image) in
+                self.imageView.image = nil
+                self.imageView.image = image?.images?.first
+            })
+        }
     }
     
     /// 选择按钮的点击事件

@@ -34,8 +34,11 @@ class ZDPhotoPickerController: UIViewController {
     /// 允许进行剪裁
     var isAllowCropper = false
     
-    /// 允许展示Live图效果
-    var isAllowShowLive = true
+    /// 相册页面允许展示Live图效果
+    var isAllowShowLive = false
+    
+    /// 相册页面允许展示Gif图效果
+    var isAllowShowGif = false
     
     /// 允许展示资源的顺序数字
     var isShowSelectCount = true
@@ -301,6 +304,7 @@ class ZDPhotoPickerController: UIViewController {
         manager.isAllowCaputreVideo = isAllowCaputreVideo
         manager.isAllowCropper = isAllowCropper
         manager.isAllowShowLive = isAllowShowLive
+        manager.isAllowShowGif = isAllowShowGif
         manager.isShowSelectCount = isShowSelectCount
         manager.rowImageCount = rowImageCount
         manager.cropFrame = cropFrame
@@ -651,7 +655,7 @@ extension ZDPhotoPickerController: UICollectionViewDelegate {
             
             //  拦截模拟器
             if Platform.isSimulator {
-                SwiftProgressHUD.showOnlyText("模拟器无法调用摄像头!")
+                ZDPhotoManager.default.showAlert(controller: self, message: "模拟器无法调用摄像头!")
                 return
             }
             let cameraController = ZDPhotoCameraController()
