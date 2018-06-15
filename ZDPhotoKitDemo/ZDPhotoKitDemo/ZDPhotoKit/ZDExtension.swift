@@ -65,3 +65,9 @@ extension UIColor {
     }
 }
 
+// MARK: - 从ZDPhotoBundle中获取图片
+extension UIImage {
+    convenience init?(namedInbundle name: String) {
+        self.init(named: name, in: ZDPhotoBundle, compatibleWith: nil)
+    }
+}

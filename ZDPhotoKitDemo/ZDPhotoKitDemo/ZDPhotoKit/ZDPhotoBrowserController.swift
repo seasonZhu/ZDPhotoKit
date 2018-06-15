@@ -48,14 +48,14 @@ class ZDPhotoBrowserController: UIViewController {
             naviBar.rightButton.setTitle(nil, for: .normal)
             naviBar.rightButton.frame = CGRect(x: naviBar.rightButton.frame.minX, y: naviBar.rightButton.frame.minY, width: 32, height: 32)
             naviBar.rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-            naviBar.rightButton.setBackgroundImage(UIImage(named: "image_not_selected"), for: .normal)
+            naviBar.rightButton.setBackgroundImage(UIImage(namedInbundle: "image_not_selected"), for: .normal)
             
             naviBar.rightButton.setTitleColor(.white, for: .selected)
-            naviBar.rightButton.setBackgroundImage(UIImage(named: "photo_original_select"), for: .selected)
+            naviBar.rightButton.setBackgroundImage(UIImage(namedInbundle: "photo_original_select"), for: .selected)
         }else {
             naviBar.rightButton.setTitle(nil, for: .normal)
-            naviBar.rightButton.setImage(UIImage(named: "image_not_selected"), for: .normal)
-            naviBar.rightButton.setImage(UIImage(named: "image_selected"), for: .selected)
+            naviBar.rightButton.setImage(UIImage(namedInbundle: "image_not_selected"), for: .normal)
+            naviBar.rightButton.setImage(UIImage(namedInbundle: "image_selected"), for: .selected)
         }
         
         
@@ -106,7 +106,7 @@ class ZDPhotoBrowserController: UIViewController {
     private lazy var downloanButton: UIButton = {
         let button = UIButton()
         button.frame = CGRect(x: ZDConstant.kScreenWidth - 20 - 44, y: ZDConstant.kScreenHeight - 20 - 44, width: 44, height: 44)
-        button.setImage(UIImage(named: "image_download"), for: .normal)
+        button.setImage(UIImage(namedInbundle: "image_download"), for: .normal)
         button.addTarget(self, action: #selector(downloadAction(_ :)), for: .touchUpInside)
         button.isHidden = true
         return button
@@ -134,8 +134,8 @@ class ZDPhotoBrowserController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         button.setTitleColor(.gray, for: .normal)
         button.setTitleColor(.white, for: .selected)
-        button.setImage(UIImage(named: "photo_original_normal"), for: .normal)
-        button.setImage(UIImage(named: "photo_original_select"), for: .selected)
+        button.setImage(UIImage(namedInbundle: "photo_original_normal"), for: .normal)
+        button.setImage(UIImage(namedInbundle: "photo_original_select"), for: .selected)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
         return button
     }()
@@ -265,6 +265,9 @@ class ZDPhotoBrowserController: UIViewController {
                     self?.assetTypeSet.insert(asset.type)
                 }
                 
+                //  播放动画
+                self?.playAnimation()
+                
             }else {
                 //  从数组中移除
                 self?.selectAssets.removeZDAssetModel(asset)
@@ -309,15 +312,24 @@ class ZDPhotoBrowserController: UIViewController {
     //  下载按钮的点击事件
     @objc private func downloadAction(_ button: UIButton) {
         
-//         PHPhotoLibrary.shared().performChanges({
-//            PHAssetChangeRequest.creationRequestForAsset(from: self.asset.asset)
-//         }) { (isSuccess, error) in
-//             let message = isSuccess ? "图片保存成功！" : "图片保存失败！"
-//             DispatchQueue.main.async {
-//                SwiftProgressHUD.showOnlyText(message)
-//             }
-//         }
- 
+        ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, info) in
+            
+            //  守护图片有值
+            guard let saveImage = image else {
+                SwiftProgressHUD.showOnlyText("获取图片失败!")
+                return
+            }
+            
+            //  保存图片
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAsset(from: saveImage)
+            }) { (isSuccess, error) in
+                let message = isSuccess ? "图片保存成功！" : "图片保存失败！"
+                DispatchQueue.main.async {
+                    SwiftProgressHUD.showOnlyText(message)
+                }
+            }
+        }
     }
     
     //  点击了完成按钮
@@ -330,6 +342,20 @@ class ZDPhotoBrowserController: UIViewController {
     //MARK:- 原图按钮的点击事件
     @objc private func originalImageButtonAction(_ button: UIButton) {
         button.isSelected = !button.isSelected
+    }
+    
+    /// 播放动画
+    private func playAnimation() {
+        UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: .allowUserInteraction, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2, animations: {
+                self.naviBar.rightButton.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.2, relativeDuration: 0.4, animations: {
+                self.naviBar.rightButton.transform = CGAffineTransform.identity
+            })
+            
+        }, completion: nil)
     }
     
     deinit {

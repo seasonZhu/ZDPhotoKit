@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         picker.isAllowTakePhoto = true
         picker.isAllowShowLive = true
         picker.isAllowShowGif = true
-        picker.isShowSelectCount = true
+        picker.isShowSelectCount = false
         picker.maxSelected = 5
         picker.rowImageCount = 7
         let navi = UINavigationController(rootViewController: picker)

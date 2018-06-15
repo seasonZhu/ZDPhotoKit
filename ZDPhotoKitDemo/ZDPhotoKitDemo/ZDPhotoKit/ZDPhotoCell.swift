@@ -40,13 +40,13 @@ class ZDPhotoCell: UICollectionViewCell {
         let button = UIButton()
         if ZDPhotoManager.default.isShowSelectCount {
             button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-            button.setBackgroundImage(UIImage(named: "image_not_selected"), for: .normal)
+            button.setBackgroundImage(UIImage(namedInbundle: "image_not_selected"), for: .normal)
             
             button.setTitleColor(.white, for: .selected)
-            button.setBackgroundImage(UIImage(named: "photo_original_select"), for: .selected)
+            button.setBackgroundImage(UIImage(namedInbundle: "photo_original_select"), for: .selected)
         }else {
-            button.setImage(UIImage(named: "image_not_selected"), for: .normal)
-            button.setImage(UIImage(named: "image_selected"), for: .selected)
+            button.setImage(UIImage(namedInbundle: "image_not_selected"), for: .normal)
+            button.setImage(UIImage(namedInbundle: "image_selected"), for: .selected)
         }
         button.addTarget(self, action: #selector(selectCellButtonAction(_ :)), for: .touchUpInside)
         return button
@@ -92,11 +92,11 @@ class ZDPhotoCell: UICollectionViewCell {
             upLeftStatusIcon.image = nil
             
             if newValue.subType == .gif {
-                upLeftStatusIcon.image = UIImage(named: "photo_mark_gif")
+                upLeftStatusIcon.image = UIImage(namedInbundle: "photo_mark_gif")
             }else if newValue.subType == .live {
-                upLeftStatusIcon.image = UIImage(named: "photo_mark_live")
+                upLeftStatusIcon.image = UIImage(namedInbundle: "photo_mark_live")
             }else if newValue.type == .video {
-                upLeftStatusIcon.image = UIImage(named: "photo_mark_video")
+                upLeftStatusIcon.image = UIImage(namedInbundle: "photo_mark_video")
             }else if newValue.type == .photo {
                 
             }

@@ -23,3 +23,8 @@ struct ZDConstant {
         return kScreenHeight == 812 ? 34 : 0
     }
 }
+
+
+/// ZDPhoto.bundle
+let path = Bundle.main.path(forResource: "ZPhoto", ofType: "bundle")
+let ZDPhotoBundle = Bundle(path: path!)

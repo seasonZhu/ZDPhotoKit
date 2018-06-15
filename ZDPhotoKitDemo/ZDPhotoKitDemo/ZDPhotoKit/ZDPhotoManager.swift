@@ -488,7 +488,7 @@ class ZDPhotoManager {
     func showAlert(controller: UIViewController, message: String? = nil) {
         //弹出提示
         let title = message ?? "你最多只能选择\(maxSelected)张照片"
-        /*
+        /* 原生UIAlertController
         let alertController = UIAlertController(title: title, message: nil,
                                                 preferredStyle: .alert)
         
