@@ -41,7 +41,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
         let livePhoteView = PHLivePhotoView()
         livePhoteView.frame = scrollView.bounds
         livePhoteView.isUserInteractionEnabled = true
-        livePhoteView.contentMode = .scaleAspectFill
+        livePhoteView.contentMode = .scaleAspectFit
         livePhoteView.clipsToBounds = true
         livePhoteView.isHidden = true
         return livePhoteView
@@ -59,7 +59,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
     }()
     
     //  控制器消失的回调
-    var dismissCallback: (() -> ()) = { }
+    var dismissCallback: (() -> ())?
     
     /// asset模型
     private var newAsset = ZDAssetModel()
@@ -158,7 +158,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
     
     //  图片单击事件响应
     @objc private func tapSingleDid(_ tap: UITapGestureRecognizer) {
-        dismissCallback()
+        dismissCallback?()
     }
     
     //  图片双击事件响应
@@ -200,10 +200,15 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
         livePhoteView.livePhoto = nil
         videoView.image = nil
         
+        imageView.isHidden = false
         livePhoteView.isHidden = true
         videoView.isHidden = true
         
         if model.type == .video {
+            
+            imageView.isHidden = true
+            livePhoteView.isHidden = true
+            videoView.isHidden = false
             
             if player != nil {
                 playerLayer?.removeFromSuperlayer()
@@ -213,7 +218,6 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
             }
             
             ZDPhotoManager.default.getVideo(asset: model.asset) { (url, image) in
-                self.videoView.isHidden = false
                 self.videoView.image = image
                 guard let videoUrl = url else { return }
                 
@@ -226,20 +230,26 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
                 
             }
         }else {
+            
+            imageView.isHidden = false
+            livePhoteView.isHidden = true
+            videoView.isHidden = true
+            
             if model.subType == .gif {
                 
                 ZDPhotoManager.default.getGif(asset: model.asset, callback: { (data, image) in
-                    //self.imageView.animatedImage = FLAnimatedImage(gifData: data)
                     self.imageView.image = image
                 })
             }else if model.subType == .live {
+                
+                imageView.isHidden = true
+                livePhoteView.isHidden = false
                 
                 //  添加长按手势
                 let longTap = UILongPressGestureRecognizer(target: self, action: #selector(livePhotoStart(_ :)))
                 livePhoteView.addGestureRecognizer(longTap)
                 
                 ZDPhotoManager.default.getLivePhoto(asset: model.asset, targetSize: bounds.size, callback: { (livePhoto, image, url) in
-                    self.livePhoteView.isHidden = false
                     self.livePhoteView.livePhoto = livePhoto
                     self.livePhoteView.isMuted = true
                     self.livePhoteView.startPlayback(with: .full)
@@ -279,7 +289,7 @@ extension ZDPhotoBrowserCell: UIScrollViewDelegate {
         }else if imageView.isHidden && !livePhoteView.isHidden {
             return livePhoteView
         }else {
-            return imageView
+            return nil
         }
         
     }
