@@ -43,17 +43,14 @@ class ZDPhotoPickerController: UIViewController {
     /// 允许展示资源的顺序数字
     var isShowSelectCount = true
     
-    /// 是否发布
-    var isPublish = false
-    
-    /// 是否注册过来
-    var isRegist = false
-    
     /// 最大的相片选择数量
     var maxSelected = 9
     
     /// 一行展示图片的数量
     var rowImageCount = 4
+    
+    /// 通过视频时间筛选视频 默认大于2分钟的视频不要
+    var maxVideoTime = 120
     
     /// 剪裁的大小
     var cropFrame = CGRect(x: 0, y: ZDConstant.kScreenHeight / 2.0 - ZDConstant.kScreenWidth / 2.0, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenWidth)
@@ -310,6 +307,7 @@ class ZDPhotoPickerController: UIViewController {
         manager.cropFrame = cropFrame
         maxSelected = isAllowCropper ? 1 : maxSelected
         manager.maxSelected = maxSelected
+        manager.maxVideoTime = maxVideoTime
         
         //  判断是否授权
         ZDPhotoManager.default.authorizationStatus { (isOK) in
