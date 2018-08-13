@@ -48,14 +48,14 @@ class ZDPhotoBrowserController: UIViewController {
             naviBar.rightButton.setTitle(nil, for: .normal)
             naviBar.rightButton.frame = CGRect(x: naviBar.rightButton.frame.minX, y: naviBar.rightButton.frame.minY, width: 32, height: 32)
             naviBar.rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-            naviBar.rightButton.setBackgroundImage(UIImage(namedInbundle: "image_not_selected"), for: .normal)
+            naviBar.rightButton.setBackgroundImage(UIImage(namedInBundle: "image_not_selected"), for: .normal)
             
             naviBar.rightButton.setTitleColor(.white, for: .selected)
-            naviBar.rightButton.setBackgroundImage(UIImage(namedInbundle: "photo_original_select"), for: .selected)
+            naviBar.rightButton.setBackgroundImage(UIImage(namedInBundle: "photo_original_select"), for: .selected)
         }else {
             naviBar.rightButton.setTitle(nil, for: .normal)
-            naviBar.rightButton.setImage(UIImage(namedInbundle: "image_not_selected"), for: .normal)
-            naviBar.rightButton.setImage(UIImage(namedInbundle: "image_selected"), for: .selected)
+            naviBar.rightButton.setImage(UIImage(namedInBundle: "image_not_selected"), for: .normal)
+            naviBar.rightButton.setImage(UIImage(namedInBundle: "image_selected"), for: .selected)
         }
         
         
@@ -106,7 +106,7 @@ class ZDPhotoBrowserController: UIViewController {
     private lazy var downloanButton: UIButton = {
         let button = UIButton()
         button.frame = CGRect(x: ZDConstant.kScreenWidth - 20 - 44, y: ZDConstant.kScreenHeight - 20 - 44, width: 44, height: 44)
-        button.setImage(UIImage(namedInbundle: "image_download"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "image_download"), for: .normal)
         button.addTarget(self, action: #selector(downloadAction(_ :)), for: .touchUpInside)
         button.isHidden = true
         return button
@@ -134,8 +134,8 @@ class ZDPhotoBrowserController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         button.setTitleColor(.gray, for: .normal)
         button.setTitleColor(.white, for: .selected)
-        button.setImage(UIImage(namedInbundle: "photo_original_normal"), for: .normal)
-        button.setImage(UIImage(namedInbundle: "photo_original_select"), for: .selected)
+        button.setImage(UIImage(namedInBundle: "photo_original_normal"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "photo_original_select"), for: .selected)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
         return button
     }()

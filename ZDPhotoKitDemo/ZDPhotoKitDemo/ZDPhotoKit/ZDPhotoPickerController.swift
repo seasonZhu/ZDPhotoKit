@@ -174,8 +174,8 @@ class ZDPhotoPickerController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         button.setTitleColor(.gray, for: .normal)
         button.setTitleColor(.black, for: .selected)
-        button.setImage(UIImage(namedInbundle: "photo_original_normal"), for: .normal)
-        button.setImage(UIImage(namedInbundle: "photo_original_select"), for: .selected)
+        button.setImage(UIImage(namedInBundle: "photo_original_normal"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "photo_original_select"), for: .selected)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
         return button
     }()

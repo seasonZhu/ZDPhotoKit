@@ -31,7 +31,7 @@ class ZDPhotoCameraController: UIViewController {
     private lazy var naviBar: ZDPhotoNaviBar = {
         let naviBar = ZDPhotoNaviBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: ZDConstant.kNavigationBarHeight))
         naviBar.backgroundColor = .clear
-        let image = UIImage(namedInbundle: "camera_overturn_white")?.withRenderingMode(.alwaysOriginal)
+        let image = UIImage(namedInBundle: "camera_overturn_white")?.withRenderingMode(.alwaysOriginal)
         naviBar.setTitle("")
         naviBar.titleButton.setImage(nil, for: .normal)
         naviBar.rightButton.setImage(image, for: .normal)
@@ -77,7 +77,7 @@ class ZDPhotoCameraController: UIViewController {
     
     ///  聚焦
     private lazy var focusingView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(namedInbundle:"camera_focusing"))
+        let imageView = UIImageView(image: UIImage(namedInBundle:"camera_focusing"))
         imageView.frame = CGRect(x: 0, y: 0, width: imageView.bounds.size.width, height: imageView.bounds.size.height)
         imageView.isHidden = true
         return imageView
@@ -99,8 +99,8 @@ class ZDPhotoCameraController: UIViewController {
     private lazy var squareButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: layerView.frame.origin.y + layerView.frame.size.height + 5, width: 50, height: 50))
         button.isSelected = true
-        button.setImage(UIImage(namedInbundle: "photo_camera_square_normal"), for: .normal)
-        button.setImage(UIImage(namedInbundle: "photo_camera_square_select"), for: .selected)
+        button.setImage(UIImage(namedInBundle: "photo_camera_square_normal"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "photo_camera_square_select"), for: .selected)
         button.addTarget(self, action: #selector(squareButtonAction(_: )), for: .touchUpInside)
         return button
     }()
@@ -110,8 +110,8 @@ class ZDPhotoCameraController: UIViewController {
         let button = UIButton(frame: CGRect(x: squareButton.frame.origin.x + squareButton.frame.size.width,
                                             y: squareButton.frame.origin.y,
                                             width: 50, height: 50))
-        button.setImage(UIImage(namedInbundle: "photo_camera_shu_normal"), for: .normal)
-        button.setImage(UIImage(namedInbundle: "photo_camera_shu_select"), for: .selected)
+        button.setImage(UIImage(namedInBundle: "photo_camera_shu_normal"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "photo_camera_shu_select"), for: .selected)
         button.addTarget(self, action: #selector(rectangleButtonAction(_: )), for: .touchUpInside)
         return button
     }()
@@ -143,7 +143,7 @@ class ZDPhotoCameraController: UIViewController {
     private lazy var deleteButton: UIButton = {
         let button = UIButton(frame: recordButton.frame)
         button.alpha = 0
-        button.setImage(UIImage(namedInbundle: "video_delete_dustbin_white"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "video_delete_dustbin_white"), for: .normal)
         button.addTarget(self, action: #selector(deleteButtonAction(_:)), for: .touchUpInside)
         return button
     }()
@@ -152,16 +152,16 @@ class ZDPhotoCameraController: UIViewController {
     private lazy var nextButton: UIButton = {
         let button = UIButton(frame: recordButton.frame)
         button.alpha = 0
-        button.setImage(UIImage(namedInbundle: "video_next_button_white"), for: .normal)
-        button.setImage(UIImage(namedInbundle: "video_next_button_highlighted"), for: .highlighted)
-        button.setImage(UIImage(namedInbundle: "video_next_button_disabled"), for: .disabled)
+        button.setImage(UIImage(namedInBundle: "video_next_button_white"), for: .normal)
+        button.setImage(UIImage(namedInBundle: "video_next_button_highlighted"), for: .highlighted)
+        button.setImage(UIImage(namedInBundle: "video_next_button_disabled"), for: .disabled)
         button.addTarget(self, action: #selector(nextButtonAction(_:)), for: .touchUpInside)
         return button
     }()
     
     ///  导航栏的切换摄像头的按钮
     private lazy var rightBarItem: UIBarButtonItem = {
-        let image = UIImage(namedInbundle: "camera_overturn")?.withRenderingMode(.alwaysOriginal)
+        let image = UIImage(namedInBundle: "camera_overturn")?.withRenderingMode(.alwaysOriginal)
         let barItem = UIBarButtonItem(image: image ,style: .plain, target: self, action: #selector(changeCamera))
         return barItem
     }()

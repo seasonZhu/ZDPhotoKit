@@ -19,7 +19,7 @@ class ZDPhotoCameraCell: UICollectionViewCell {
     private var input: AVCaptureDeviceInput?
     private var videoLayer: AVCaptureVideoPreviewLayer!
     
-    private lazy var photoIcon = UIImageView(image: UIImage(namedInbundle: "compose_photo_photograph_highlighted"))
+    private lazy var photoIcon = UIImageView(image: UIImage(namedInBundle: "compose_photo_photograph_highlighted"))
     
     //MARK:- 初始化
     override init(frame: CGRect) {

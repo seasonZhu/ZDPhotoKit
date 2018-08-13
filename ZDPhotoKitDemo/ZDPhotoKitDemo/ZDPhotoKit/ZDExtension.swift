@@ -66,8 +66,13 @@ extension UIColor {
 }
 
 // MARK: - 从ZDPhotoBundle中获取图片
+
+/// ZDPhoto.bundle
+let path = Bundle.main.path(forResource: "ZPhoto", ofType: "bundle")
+let ZDPhotoBundle = Bundle(path: path!)
+
 extension UIImage {
-    convenience init?(namedInbundle name: String) {
+    convenience init?(namedInBundle name: String) {
         self.init(named: name, in: ZDPhotoBundle, compatibleWith: nil)
     }
 }

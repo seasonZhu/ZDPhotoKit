@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         picker.isAllowGif = true
         picker.isAllowLive = true
         picker.isAllowVideo = true
-        picker.isAllowCropper = false
+        picker.isAllowCropper = true
         picker.isAllowCaputreVideo = true
         picker.isAllowTakePhoto = true
         picker.isAllowShowLive = true
@@ -68,7 +68,4 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
-

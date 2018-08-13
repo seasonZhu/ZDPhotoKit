@@ -29,8 +29,8 @@ class ZDPhotoNaviBar: UIView {
         let height: CGFloat = 33
         let top = frame.height - height
         let backButton = UIButton(frame: CGRect(x: 0, y: top, width: 70, height: height))
-        backButton.setImage(UIImage(namedInbundle: "navigationBar_back"), for: .normal)
-        backButton.setImage(UIImage(namedInbundle: "navigationBar_back"), for: .highlighted)
+        backButton.setImage(UIImage(namedInBundle: "navigationBar_back"), for: .normal)
+        backButton.setImage(UIImage(namedInBundle: "navigationBar_back"), for: .highlighted)
         backButton.imageEdgeInsets = UIEdgeInsetsMake(6.5, 7, 6.5, 33)
         backButton.titleEdgeInsets = UIEdgeInsetsMake(0, -3, 0, 0)
         self.backButton = backButton
@@ -45,7 +45,7 @@ class ZDPhotoNaviBar: UIView {
         titleButton.setTitleColor(.black, for: .normal)
         titleButton.setTitleColor(.black, for: .highlighted)
         titleButton.setTitle("所有照片", for: .normal)
-        titleButton.setImage(UIImage(namedInbundle: "headlines_icon_arrow"), for: .normal)
+        titleButton.setImage(UIImage(namedInBundle: "headlines_icon_arrow"), for: .normal)
         self.titleButton = titleButton
         
         super.init(frame: frame)
@@ -86,6 +86,6 @@ class ZDPhotoNaviBar: UIView {
     }
     
     func setRightButtonImage(_ imageName: String) {
-        rightButton.setImage(UIImage(namedInbundle: imageName), for: .normal)
+        rightButton.setImage(UIImage(namedInBundle: imageName), for: .normal)
     }
 }
