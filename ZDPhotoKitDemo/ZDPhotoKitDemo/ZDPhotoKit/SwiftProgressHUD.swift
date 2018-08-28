@@ -10,7 +10,6 @@ import UIKit
 
 /// Current_Version：0.0.6
 /// Github: https://github.com/stackhou/SwiftProgressHUD
-/// season Zhu: 我基于原有框架进行了部分修改 便于我们项目中使用, runable中的闭包必须在autoClear为true的时候才会执行
 
 private let yj_topBarTag: Int = 1001
 private let yj_showHUDBackColor = UIColor(red:0, green:0, blue:0, alpha: 0.8)
@@ -120,7 +119,7 @@ public class SwiftProgressHUD {
         }
         return nil
     }
-
+    
     /// Clear all
     public class func hideAllHUD() {
         SwiftProgress.clear()
@@ -133,8 +132,8 @@ class SwiftProgress: NSObject {
     
     static var hudBackgroundColor: UIColor = UIColor.clear
     static var hideHUDTaps: Int = 2
-    static var windows = Array<UIWindow!>()
-    static let rv = UIApplication.shared.keyWindow?.subviews.first as UIView!
+    static var windows = Array<UIWindow??>()
+    static let rv = UIApplication.shared.keyWindow?.subviews.first as UIView?
     static var timer: DispatchSource!
     static var timerTimes = 0
     
@@ -160,7 +159,7 @@ class SwiftProgress: NSObject {
         let statusBarFrame = UIApplication.shared.statusBarFrame
         let frame = CGRect(x: 0, y: 0, width: statusBarFrame.width, height: (statusBarFrame.height + 44))
         let window = UIWindow()
-        window.rootViewController = UIViewController()
+        window.rootViewController = UIViewController.currentViewController()
         window.backgroundColor = UIColor.clear
         let view = UIView()
         view.backgroundColor = backgroundColor
@@ -213,7 +212,10 @@ class SwiftProgress: NSObject {
                         }, completion: { (b) in
                             let selector = #selector(SwiftProgress.hideNotice(_:))
                             self.perform(selector, with: window, afterDelay: TimeInterval(autoClearTime))
-                            runable?()
+                            //  延时操作
+                            DispatchQueue.main.asyncAfter(deadline: .now() + autoClearTime) {
+                                runable?()
+                            }
                         })
                     }
                 })
@@ -227,7 +229,7 @@ class SwiftProgress: NSObject {
         let frame = CGRect(x: 0, y: 0, width: 78, height: 78)
         let window = UIWindow()
         window.backgroundColor = hudBackgroundColor
-        window.rootViewController = UIViewController()
+        window.rootViewController = UIViewController.currentViewController()
         let mainView = UIView()
         mainView.layer.cornerRadius = 12
         mainView.backgroundColor = backgroundColor
@@ -246,7 +248,8 @@ class SwiftProgress: NSObject {
                 iv.contentMode = UIViewContentMode.scaleAspectFit
                 mainView.addSubview(iv)
                 timer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.main) as! DispatchSource
-                timer.schedule(deadline: DispatchTime.now(), repeating: DispatchTimeInterval.milliseconds(timeMilliseconds))
+                //timer.schedule(deadline: DispatchTime.now(), repeating: DispatchTimeInterval.milliseconds(timeMilliseconds))
+                timer.scheduleRepeating(deadline: DispatchTime.now(), interval: DispatchTimeInterval.milliseconds(timeMilliseconds))
                 timer.setEventHandler(handler: { () -> Void in
                     let name = imageNames[timerTimes % imageNames.count]
                     iv.image = name
@@ -289,7 +292,7 @@ class SwiftProgress: NSObject {
     static func showText(_ text: String, autoClear: Bool = true, autoClearTime: Double = 2, runable: (() -> ())? = nil) -> UIWindow {
         let window = UIWindow()
         window.backgroundColor = hudBackgroundColor
-        window.rootViewController = UIViewController()
+        window.rootViewController = UIViewController.currentViewController()
         let mainView = UIView()
         mainView.layer.cornerRadius = 12
         mainView.backgroundColor = yj_showHUDBackColor
@@ -333,7 +336,11 @@ class SwiftProgress: NSObject {
         if autoClear {
             let selector = #selector(SwiftProgress.hideNotice(_:))
             self.perform(selector, with: window, afterDelay: TimeInterval(autoClearTime))
-            runable?()
+            
+            //  延时操作
+            DispatchQueue.main.asyncAfter(deadline: .now() + autoClearTime) {
+                runable?()
+            }
         }
         return window
     }
@@ -343,7 +350,7 @@ class SwiftProgress: NSObject {
         var frame = CGRect(x: 0, y: 0, width: 90, height: 90)
         let window = UIWindow()
         window.backgroundColor = hudBackgroundColor
-        window.rootViewController = UIViewController()
+        window.rootViewController = UIViewController.currentViewController()
         let mainView = UIView()
         mainView.layer.cornerRadius = 8
         mainView.backgroundColor = yj_showHUDBackColor
@@ -376,7 +383,7 @@ class SwiftProgress: NSObject {
         label.numberOfLines = 0
         
         var size = label.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 82, height: CGFloat.greatestFiniteMagnitude))
-
+        
         //  如果字符串的长度大于原有预计的90 需要重新进行计算
         if size.width > 90 {
             label.frame.origin.x = 5
@@ -389,9 +396,9 @@ class SwiftProgress: NSObject {
             frame.size.width = size.width + 10
             frame.size.height = size.height + label.frame.minY + 5
             checkmarkView.frame.origin.x = (frame.width - checkmarkView.frame.width) / 2
-
+            
         }
- 
+        
         mainView.addSubview(label)
         
         window.frame = rv!.bounds
@@ -420,7 +427,10 @@ class SwiftProgress: NSObject {
         if autoClear {
             let selector = #selector(SwiftProgress.hideNotice(_:))
             self.perform(selector, with: window, afterDelay: TimeInterval(autoClearTime))
-            runable?()
+            //  延时操作
+            DispatchQueue.main.asyncAfter(deadline: .now() + autoClearTime) {
+                runable?()
+            }
         }
         return window
     }
@@ -497,7 +507,10 @@ class SwiftProgress: NSObject {
         if autoClear {
             let selector = #selector(SwiftProgress.hideNotice(_:))
             self.perform(selector, with: window, afterDelay: TimeInterval(autoClearTime))
-            runable?()
+            //  延时操作
+            DispatchQueue.main.asyncAfter(deadline: .now() + autoClearTime) {
+                runable?()
+            }
         }
         return window
     }
@@ -632,3 +645,20 @@ extension UIWindow{
         SwiftProgress.hideNotice(self)
     }
 }
+
+
+extension UIViewController {
+    class func currentViewController(base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return currentViewController(base: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            return currentViewController(base: tab.selectedViewController)
+        }
+        if let presented = base?.presentedViewController {
+            return currentViewController(base: presented)
+        }
+        return base
+    }
+}
+

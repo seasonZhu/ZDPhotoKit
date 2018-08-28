@@ -10,7 +10,7 @@ import Foundation
 import Photos
 
 /// 多媒体的两大类
-enum ZDAssetType {
+public enum ZDAssetType {
     case photo, //  相片
          video  //  视频
 }

@@ -14,7 +14,7 @@ import Photos
 // MARK: - 字符串分类
 extension String {
     ///  判断字符串是否包含某些字符串
-    public func contains(_ find: String, compareOption: NSString.CompareOptions) -> Bool {
+    func contains(_ find: String, compareOption: NSString.CompareOptions) -> Bool {
         return self.range(of: find, options: compareOption) != nil
     }
 }
@@ -23,14 +23,14 @@ extension String {
 
 /// 针对普遍的移除
 extension Array where Element: Equatable {
-    public mutating func removeObject(_ item: Element) {
+    mutating func removeObject(_ item: Element) {
         self = filter { $0 != item }
     }
 }
 
 /// 针对ZDAssetModel的移除
 extension Array where Element: ZDAssetModel {
-    internal mutating func removeZDAssetModel(_ item: Element) {
+    mutating func removeZDAssetModel(_ item: Element) {
         self = filter { $0.asset.localIdentifier != item.asset.localIdentifier }
     }
 }
@@ -66,11 +66,6 @@ extension UIColor {
 }
 
 // MARK: - 从ZDPhotoBundle中获取图片
-
-/// ZDPhoto.bundle
-let path = Bundle.main.path(forResource: "ZPhoto", ofType: "bundle")
-let ZDPhotoBundle = Bundle(path: path!)
-
 extension UIImage {
     convenience init?(namedInBundle name: String) {
         self.init(named: name, in: ZDPhotoBundle, compatibleWith: nil)

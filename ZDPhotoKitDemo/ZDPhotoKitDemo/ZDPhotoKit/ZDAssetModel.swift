@@ -10,31 +10,31 @@ import UIKit
 import Photos
 
 /// 自定义的Asset模型
-class ZDAssetModel: NSObject {
+public class ZDAssetModel: NSObject {
     
     /// 图片资源
-    var asset = PHAsset()
+    public var asset = PHAsset()
     
     /// 资源类型
-    var type: ZDAssetType = .photo
+    public var type: ZDAssetType = .photo
     
     /// 资源子类
     var subType: ZDAssetSubType = .normal
     
     /// 图片宽
-    var pixW: Int = 0
+    public var pixW: Int = 0
     
     /// 图片高
-    var pixH: Int = 0
+    public var pixH: Int = 0
     
     /// 是否被选中
-    var isSelect = false
+    public var isSelect = false
     
     /// 被选择的序列
-    var selectNum = 0
+    public var selectNum = 0
     
     /// 视频时长
-    var timeLength = ""
+    public var timeLength = ""
     
     /// 生成ZDAssetModel模型
     ///

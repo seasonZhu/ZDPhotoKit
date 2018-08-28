@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 /// 图片管理器
-class ZDPhotoManager {
+public class ZDPhotoManager {
     //MARK:- 属性设置
     
     /// 允许选择视频
@@ -73,7 +73,7 @@ class ZDPhotoManager {
     ///   - allowPickingVideo: 是否筛选视频
     ///   - allowPickingImage: 是否筛选图片
     ///   - callback: 回调
-    func getAllAlbums(allowPickingVideo: Bool,
+    public func getAllAlbums(allowPickingVideo: Bool,
                       allowPickingImage: Bool,
                       callback: @escaping (([ZDAlbumModel]) -> ())) {
         var albums = [ZDAlbumModel]()
@@ -147,7 +147,7 @@ class ZDPhotoManager {
     ///   - allowPickingVideo: 是否筛选视频
     ///   - allowPickingImage: 是否筛选图片
     ///   - callback: 回调
-    func getAllAssetOfAlbum(model: ZDAlbumModel,
+    public func getAllAssetOfAlbum(model: ZDAlbumModel,
                             allowPickingVideo: Bool,
                             allowPickingImage: Bool,
                             callback: @escaping (([ZDAssetModel]) -> ())) {
@@ -194,7 +194,7 @@ class ZDPhotoManager {
     ///   - allowPickingVideo: 是否筛选视频
     ///   - allowPickingImage: 是否筛选图片
     ///   - callback: 回调
-    func getAllAssetOfAlbum(allowPickingVideo: Bool,
+    public func getAllAssetOfAlbum(allowPickingVideo: Bool,
                             allowPickingImage: Bool,
                             callback: @escaping (([ZDAssetModel]) -> ())) {
         getAllAlbums(allowPickingVideo: allowPickingVideo, allowPickingImage: allowPickingImage) { (albums) in
@@ -214,7 +214,7 @@ class ZDPhotoManager {
     ///   - asset: 资源
     ///   - targetSize: 尺寸
     ///   - callback: 回调
-    func getPhoto(asset: PHAsset,
+    public func getPhoto(asset: PHAsset,
                   targetSize: CGSize,
                   callback: @escaping (UIImage?, Dictionary<AnyHashable, Any>?)-> ()) {
         let option = PHImageRequestOptions()
@@ -272,7 +272,7 @@ class ZDPhotoManager {
     /// - Parameters:
     ///   - asset: 资源
     ///   - callback: 回调
-    func getGif(asset: PHAsset, callback: @escaping ((Data?, UIImage?) -> ())) {
+    public func getGif(asset: PHAsset, callback: @escaping ((Data?, UIImage?) -> ())) {
         let option = PHImageRequestOptions()
         option.isNetworkAccessAllowed = true
         option.resizeMode = .fast
@@ -303,7 +303,7 @@ class ZDPhotoManager {
     /// - Parameters:
     ///   - asset: 资源
     ///   - callback: 回调
-    func getVideo(asset: PHAsset, callback: @escaping ((URL?, UIImage?) -> ())) {
+    public func getVideo(asset: PHAsset, callback: @escaping ((URL?, UIImage?) -> ())) {
         let option = PHVideoRequestOptions()
         option.isNetworkAccessAllowed = true
         
@@ -342,7 +342,7 @@ class ZDPhotoManager {
     ///   - asset: 资源
     ///   - targetSize: 尺寸
     ///   - callback: 回调
-    func getLivePhoto(asset: PHAsset,
+    public func getLivePhoto(asset: PHAsset,
                       targetSize: CGSize,
                       callback: @escaping (PHLivePhoto?, UIImage?, URL?)-> ()) {
         let option = PHLivePhotoRequestOptions()
@@ -389,7 +389,7 @@ class ZDPhotoManager {
     ///   - asset: 资源
     ///   - isVideo: 是否是视频 默认是视频
     ///   - callback: 回调
-    func compressVideoOrLivePhoto(asset: AVAsset,
+    public func compressVideoOrLivePhoto(asset: AVAsset,
                                   isVideo: Bool = true,
                                   callback: @escaping ((URL?) -> ())) {
         let lastPath = isVideo ? "/outAssetVideo.mp4" : "/outAssetLivePhoto.mp4"
@@ -434,7 +434,7 @@ class ZDPhotoManager {
     /// - Parameters:
     ///   - models: 照片模型
     ///   - callback: 回调
-    func getPhotosSize(models: [ZDAssetModel], callback: @escaping (String, Int) -> ()) {
+    public func getPhotosSize(models: [ZDAssetModel], callback: @escaping (String, Int) -> ()) {
         
         let imageOption = PHImageRequestOptions()
         imageOption.resizeMode = .fast

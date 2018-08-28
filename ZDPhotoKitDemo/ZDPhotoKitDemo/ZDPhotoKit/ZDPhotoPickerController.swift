@@ -10,50 +10,50 @@ import UIKit
 import Photos
 
 /// 选择控制器
-class ZDPhotoPickerController: UIViewController {
+public class ZDPhotoPickerController: UIViewController {
     
     //MARK:- 属性设置
     
     //MARK:- 选项设置
     
     /// 允许选择视频
-    var isAllowVideo = false
+    public var isAllowVideo = false
     
     /// 允许选择gif
-    var isAllowGif = false
+    public var isAllowGif = false
     
     /// 允许选择live
-    var isAllowLive = false
+    public var isAllowLive = false
     
     /// 允许拍摄视频
-    var isAllowCaputreVideo = false
+    public var isAllowCaputreVideo = false
     
     /// 允许拍摄照片
-    var isAllowTakePhoto = false
+    public var isAllowTakePhoto = false
     
     /// 允许进行剪裁
-    var isAllowCropper = false
+    public var isAllowCropper = false
     
     /// 相册页面允许展示Live图效果
-    var isAllowShowLive = false
+    public var isAllowShowLive = false
     
     /// 相册页面允许展示Gif图效果
-    var isAllowShowGif = false
+    public var isAllowShowGif = false
     
     /// 允许展示资源的顺序数字
-    var isShowSelectCount = true
+    public var isShowSelectCount = true
     
     /// 最大的相片选择数量
-    var maxSelected = 9
+    public var maxSelected = 9
     
     /// 一行展示图片的数量
-    var rowImageCount = 4
+    public var rowImageCount = 4
     
     /// 通过视频时间筛选视频 默认大于2分钟的视频不要
-    var maxVideoTime = 120
+    public var maxVideoTime = 120
     
     /// 剪裁的大小
-    var cropFrame = CGRect(x: 0, y: ZDConstant.kScreenHeight / 2.0 - ZDConstant.kScreenWidth / 2.0, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenWidth)
+    public var cropFrame = CGRect(x: 0, y: ZDConstant.kScreenHeight / 2.0 - ZDConstant.kScreenWidth / 2.0, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenWidth)
     
     /// 控制器
     var cropPopToVC: UIViewController?
@@ -61,31 +61,31 @@ class ZDPhotoPickerController: UIViewController {
     //MARK:- 闭包回调
     
     /// 选择照片的闭包
-    var selectPhotoCallback: ((UIImage) -> ())?
+    public var selectPhotoCallback: ((UIImage) -> ())?
     
     /// 选择需要剪裁的闭包
-    var selectCropImageCallback: ((UIImage?) -> ())?
+    public var selectCropImageCallback: ((UIImage?) -> ())?
     
     /// 拍照的闭包
-    var takePhotoCallback: ((UIImage) -> ())?
+    public var takePhotoCallback: ((UIImage) -> ())?
     
     /// 选择的视频
-    var takeVideoCallback: ((UIImage?, String) -> ())?
+    public var takeVideoCallback: ((UIImage?, String) -> ())?
     
     /// livePhoto
-    var selectLivePhotoCallback: ((UIImage, PHLivePhoto, String) -> ())?
+    public var selectLivePhotoCallback: ((UIImage, PHLivePhoto, String) -> ())?
     
     /// 静态的livePhoto
-    var selectStaticLivePhotoCallback: ((UIImage) -> ())?
+    public var selectStaticLivePhotoCallback: ((UIImage) -> ())?
     
     /// 选择的Gif
-    var selectGifCallback: ((Data, CGSize) -> ())?
+    public var selectGifCallback: ((Data, CGSize) -> ())?
     
     /// 选择的视频
-    var selectVideoCallback: ((UIImage?, String) -> ())?
+    public var selectVideoCallback: ((UIImage?, String) -> ())?
     
     /// 选择的模型闭包
-    var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> ())?
+    public var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> ())?
     
     //MARK:- 私有属性
     
@@ -244,7 +244,7 @@ class ZDPhotoPickerController: UIViewController {
     private var onlyRefreshSelectNum = false
 
     //MARK:- viewDidLoad
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         resetCachedAssets()
@@ -254,21 +254,21 @@ class ZDPhotoPickerController: UIViewController {
     }
     
     //MARK:- viewWillAppear
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
         //navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     //MARK:- viewWillDisappear
-    override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
         //navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     //MARK:- 内存告警
-    override func didReceiveMemoryWarning() {
+    override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         resetCachedAssets()
     }
@@ -591,11 +591,11 @@ class ZDPhotoPickerController: UIViewController {
 }
 
 extension ZDPhotoPickerController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView,
+    public func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         
         if isAllowTakePhoto || isAllowCaputreVideo {
@@ -605,7 +605,7 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView,
+    public func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == assets.count && (isAllowTakePhoto || isAllowCaputreVideo ) {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ZDPhotoCameraCell",for: indexPath) as! ZDPhotoCameraCell
@@ -648,7 +648,7 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
 }
 
 extension ZDPhotoPickerController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == assets.count {
             
             //  拦截模拟器

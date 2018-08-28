@@ -10,25 +10,25 @@ import UIKit
 import Photos
 
 /// 自定义的相册模型
-class ZDAlbumModel: NSObject {
+public  class ZDAlbumModel: NSObject {
     
     /// 相册结果集
-    var result = PHFetchResult<PHAsset>()
+    public var result = PHFetchResult<PHAsset>()
     
     /// 相册名
-    var name = ""
+    public var name = ""
     
     /// 相册中照片数量
-    var count = 0
+    public var count = 0
     
     /// 封面asset
-    var asset: PHAsset?
+    public var asset: PHAsset?
     
     /// 封面
-    var albumImage: UIImage?
+    public var albumImage: UIImage?
     
     /// 相册中选中的照片
-    var selectAssets = [ZDAssetModel]() {
+    public var selectAssets = [ZDAssetModel]() {
         didSet {
             var selectCount = 0
             for selectAsset in selectAssets {
@@ -43,5 +43,5 @@ class ZDAlbumModel: NSObject {
     }
     
     /// 相册中选中的个数
-    var selectCount = 0
+    public var selectCount = 0
 }
