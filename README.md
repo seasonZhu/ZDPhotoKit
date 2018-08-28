@@ -20,9 +20,74 @@
 2. 角标显示数字的时候,点击的时候,会有闪动,是刷新cell重新获取image导致的问题,目前还没有想到比较好的方法,还请各位指教
 
 
-#### 安装教程
-直接将ZDPhotoKit拖入项目中,已经将资源文件集成进入Bundle
-项目功能并不理想,可以自定义的并不多,目前没有考虑cocopods
+#### 添加 ZDPhotoKit 到你的项目
+
+[CocoaPods](http://cocoapods.org/) is the recommended way to add `ZDPhotoKit` to your project.
+
+1.  Add a pod entry for `ZDPhotoKit` to your Podfile 
+
+```
+pod 'ZDPhotoKit'
+```
+
+2.  Install the pod(s) by running 
+
+```
+pod install
+```
+
+3.  Include `ZDPhotoKit`once you need it with 
+
+```
+import ZDPhotoKit
+```
+
+#### 例子
+
+```
+//  首次进来后直接进入第一个相册图片展示页面（相机胶卷）
+let picker = ZDPhotoPickerController()
+picker.isAllowGif = true
+picker.isAllowLive = true
+picker.isAllowVideo = true
+picker.isAllowCropper = true
+picker.isAllowCaputreVideo = true
+picker.isAllowTakePhoto = true
+picker.isAllowShowLive = true
+picker.isAllowShowGif = true
+picker.isShowSelectCount = false
+picker.maxSelected = 5
+picker.rowImageCount = 7
+let navi = UINavigationController(rootViewController: picker)
+present(navi, animated: true, completion: nil)
+
+//  选择资源的回调
+picker.selectAssetsCallback = { selectAssets, assetTypeSet, isOriginal in
+    for asset in selectAssets {
+        print(asset)
+    }
+    print(assetTypeSet.first.debugDescription)
+    print(isOriginal)
+}
+
+//  拍照的回调
+picker.takePhotoCallback = { image in
+    print(image)
+}
+
+//  拍摄的回调
+picker.takeVideoCallback = { image, url in
+    print(image)
+    print(url)
+}
+
+//  剪裁的回调
+picker.selectCropImageCallback = { image in
+    print(image)
+}
+
+```
+
 
 #### 说明
 
