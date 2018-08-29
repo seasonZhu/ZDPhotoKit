@@ -526,6 +526,7 @@ public class ZDPhotoPickerController: UIViewController {
         if isShowSelectCount {
             UIView.performWithoutAnimation {
                 self.collectionView.reloadData()
+                //self.collectionView.reloadItems(at: [indexPath])
             }
         }
     }
@@ -638,7 +639,8 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
             
             //  回调闭包 多个weak避免了循环引用的问题
             cell.selectCallback = { [weak self, weak cell] isSelected in
-                self?.cellAndToolbarStatusChange(cell: cell!, isSelected: isSelected, indexPath: indexPath)
+                guard let unwrapCell = cell else { return }
+                self?.cellAndToolbarStatusChange(cell: unwrapCell, isSelected: isSelected, indexPath: indexPath)
             }
             
             return cell

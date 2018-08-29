@@ -27,12 +27,12 @@ class ViewController: UIViewController {
         picker.isAllowGif = true
         picker.isAllowLive = true
         picker.isAllowVideo = true
-        picker.isAllowCropper = true
+        picker.isAllowCropper = false
         picker.isAllowCaputreVideo = true
         picker.isAllowTakePhoto = true
         picker.isAllowShowLive = true
         picker.isAllowShowGif = true
-        picker.isShowSelectCount = false
+        picker.isShowSelectCount = true
         picker.maxSelected = 5
         picker.rowImageCount = 7
         let navi = UINavigationController(rootViewController: picker)
