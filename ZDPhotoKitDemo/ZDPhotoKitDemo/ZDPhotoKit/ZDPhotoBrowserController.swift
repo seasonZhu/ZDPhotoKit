@@ -363,7 +363,7 @@ class ZDPhotoBrowserController: UIViewController {
     }
 }
 
-//MARK:- ImagePreviewVC的CollectionView相关协议方法实现
+//MARK:- UICollectionView相关协议方法实现
 extension ZDPhotoBrowserController: UICollectionViewDelegate, UICollectionViewDataSource{
     
     //  collectionView单元区域数量

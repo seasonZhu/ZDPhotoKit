@@ -26,5 +26,7 @@ struct ZDConstant {
 
 
 /// ZDPhoto.bundle
-let path = Bundle.main.path(forResource: "ZPhoto", ofType: "bundle")
-let ZDPhotoBundle = Bundle(path: path!)
+public let ZDPhotoBundle: Bundle? = {
+    let bundle = Bundle(path: Bundle(for: ZDPhotoPickerController.classForCoder()).resourcePath! + "/ZPhoto.bundle")
+    return bundle
+}()
