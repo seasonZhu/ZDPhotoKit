@@ -35,7 +35,7 @@
 		0061FC0F20CBC17A001A97FB /* ZDPhotoCropController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0061FC0E20CBC17A001A97FB /* ZDPhotoCropController.swift */; };
 		4580C41C20CE165A0056C98B /* ZDMaskCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4580C41B20CE165A0056C98B /* ZDMaskCornerView.swift */; };
 		45932B1C20CA0ED80019E912 /* SwiftProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45932B1B20CA0ED70019E912 /* SwiftProgressHUD.swift */; };
-		61F940B020D3490A001958EB /* ZPhoto.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 61F940AF20D3490A001958EB /* ZPhoto.bundle */; };
+		613B179A214640EB0093FE06 /* ZDPhoto.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 613B1799214640EB0093FE06 /* ZDPhoto.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,7 +69,7 @@
 		0061FC0E20CBC17A001A97FB /* ZDPhotoCropController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDPhotoCropController.swift; sourceTree = "<group>"; };
 		4580C41B20CE165A0056C98B /* ZDMaskCornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDMaskCornerView.swift; sourceTree = "<group>"; };
 		45932B1B20CA0ED70019E912 /* SwiftProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftProgressHUD.swift; sourceTree = "<group>"; };
-		61F940AF20D3490A001958EB /* ZPhoto.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZPhoto.bundle; sourceTree = "<group>"; };
+		613B1799214640EB0093FE06 /* ZDPhoto.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZDPhoto.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,7 +139,7 @@
 				0061FC0C20CBA170001A97FB /* UIImage+Helper.swift */,
 				0061FBD420C959D5001A97FB /* UIImage+Gif.swift */,
 				45932B1B20CA0ED70019E912 /* SwiftProgressHUD.swift */,
-				61F940AF20D3490A001958EB /* ZPhoto.bundle */,
+				613B1799214640EB0093FE06 /* ZDPhoto.bundle */,
 			);
 			path = ZDPhotoKit;
 			sourceTree = "<group>";
@@ -204,8 +204,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				0061FBA620C957BA001A97FB /* LaunchScreen.storyboard in Resources */,
-				61F940B020D3490A001958EB /* ZPhoto.bundle in Resources */,
 				0061FBA320C957BA001A97FB /* Assets.xcassets in Resources */,
+				613B179A214640EB0093FE06 /* ZDPhoto.bundle in Resources */,
 				0061FBA120C957BA001A97FB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
