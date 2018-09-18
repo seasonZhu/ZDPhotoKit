@@ -16,11 +16,11 @@ struct ZDConstant {
     static let toolbarHeight: CGFloat = 44
     
     static var kNavigationBarHeight: CGFloat {
-        return kScreenHeight == 812 ? 88 : 64
+        return UIApplication.shared.statusBarFrame.height == 44 ? 88 : 64
     }
     
     static var kBottomSafeHeight: CGFloat {
-        return kScreenHeight == 812 ? 34 : 0
+        return UIApplication.shared.statusBarFrame.height == 44 ? 34 : 0
     }
 }
 
