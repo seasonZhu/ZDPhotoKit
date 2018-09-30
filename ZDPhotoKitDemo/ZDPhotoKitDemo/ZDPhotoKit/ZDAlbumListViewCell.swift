@@ -118,7 +118,7 @@ class ZDAlbumListViewCell: UITableViewCell {
         
         photoView.frame = CGRect(x: 10, y: 5, width: 50, height: 50)
         
-        let photoNameX = self.photoView.frame.maxX + 10;
+        let photoNameX = self.photoView.frame.maxX + 10
         var photoNameWith: CGFloat = 100
         if photoNameWith > width - photoNameX - 50 {
             photoNameWith = width - photoNameX - 50
@@ -126,7 +126,7 @@ class ZDAlbumListViewCell: UITableViewCell {
         photoName.frame = CGRect(x: photoNameX, y: 0, width: photoNameWith, height: 18)
         photoName.center = CGPoint(x: photoName.center.x, y: height / 2)
         
-        let photoNumX = photoName.frame.maxX + 5;
+        let photoNumX = photoName.frame.maxX + 5
         let photoNumWidth = frame.width - photoName.frame.maxX + 5 - 20
         photoNum.frame = CGRect(x: photoNumX, y: 0, width: photoNumWidth, height: 15)
         photoNum.center = CGPoint(x: self.photoNum.center.x, y: height / 2 + 2)

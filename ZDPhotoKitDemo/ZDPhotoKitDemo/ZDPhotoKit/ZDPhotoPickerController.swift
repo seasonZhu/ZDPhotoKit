@@ -283,12 +283,12 @@ public class ZDPhotoPickerController: UIViewController {
         view.backgroundColor = UIColor.white
         navigationController?.navigationBar.isHidden = true
         
-        view.addSubview(naviBar)
-        view.bringSubview(toFront: naviBar)
         view.addSubview(collectionView)
         view.addSubview(toolbar)
         view.addSubview(albumBackgroundView)
         view.addSubview(albumView)
+        view.addSubview(naviBar)
+        view.bringSubview(toFront: naviBar)
     }
     
     //MARK:- 初始化数据
