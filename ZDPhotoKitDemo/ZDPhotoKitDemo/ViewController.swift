@@ -35,6 +35,13 @@ class ViewController: UIViewController {
         picker.isShowSelectCount = true
         picker.maxSelected = 5
         picker.rowImageCount = 7
+        picker.mainColorCallback = {
+            return UIColor.lightGray
+        }
+        picker.widgetColorCallback = {
+            return UIColor.black
+        }
+        
         let navi = UINavigationController(rootViewController: picker)
         present(navi, animated: true, completion: nil)
         

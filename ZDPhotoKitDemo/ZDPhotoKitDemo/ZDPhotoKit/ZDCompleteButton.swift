@@ -16,7 +16,7 @@ class ZDCompleteButton: UIView {
     //  已选照片数量的Label
     private lazy var numberLabel: UILabel = {
         let label = UILabel(frame:CGRect(x: 0 , y: 0 , width: 20, height: 20))
-        label.backgroundColor = UIColor.lightGreen
+        label.backgroundColor = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
         label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
         label.textAlignment = .center
@@ -32,7 +32,7 @@ class ZDCompleteButton: UIView {
         label.text = "完成"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = UIColor.lightGreen
+        label.textColor = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
         return label
     }()
     
@@ -63,7 +63,7 @@ class ZDCompleteButton: UIView {
     var isEnabled: Bool = true {
         didSet {
             tap.isEnabled = isEnabled
-            completeLabel.textColor = isEnabled ? UIColor.lightGreen : UIColor.gray
+            completeLabel.textColor = isEnabled ? ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen : UIColor.gray
         }
     }
     

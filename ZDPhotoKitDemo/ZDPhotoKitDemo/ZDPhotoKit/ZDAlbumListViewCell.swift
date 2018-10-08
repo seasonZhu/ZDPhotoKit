@@ -48,7 +48,7 @@ class ZDAlbumListViewCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textColor = .white
-        label.backgroundColor = UIColor.lightGreen
+        label.backgroundColor = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
         label.tag = kSelectedLabel
         label.textAlignment = .center
         label.layer.cornerRadius = 10
@@ -149,7 +149,7 @@ class ZDAlbumListViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         for subView in contentView.subviews {
             if subView is UILabel, subView.tag == kSelectedLabel {
-                subView.backgroundColor = UIColor.lightGreen
+                subView.backgroundColor = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
             }
         }
 

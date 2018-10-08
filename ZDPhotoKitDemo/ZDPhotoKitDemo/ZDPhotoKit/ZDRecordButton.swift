@@ -158,7 +158,8 @@ extension ZDRecordButton {
     //  绘制进度
     private func drawProgress(rect: CGRect, center: CGPoint, radius: CGFloat, progress: CGFloat) {
         let progressRadius = radius * 0.95
-        UIColor.lightGreen.set()
+        let color = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
+        color.set()
         let aPath = UIBezierPath(arcCenter: center,
                                  radius: progressRadius,
                                  startAngle: CGFloat(-Double.pi / 2.0),

@@ -52,6 +52,14 @@ public class ZDPhotoManager {
     /// 剪裁的大小
     var cropFrame = CGRect(x: 0, y: ZDConstant.kScreenHeight / 2.0 - ZDConstant.kScreenWidth / 2.0, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenWidth)
     
+    //MARK:- 配置化闭包
+    
+    /// 导航栏的主题颜色
+    var mainColorCallback: (() -> (UIColor))?
+    
+    /// 其他控件的颜色
+    var widgetColorCallback: (() -> (UIColor))?
+    
     //MARK:- 单例
     static let `default` = ZDPhotoManager()
     private init() {}

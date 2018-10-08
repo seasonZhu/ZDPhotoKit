@@ -87,6 +87,14 @@ public class ZDPhotoPickerController: UIViewController {
     /// 选择的模型闭包
     public var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> ())?
     
+    //MARK:- 配置化闭包
+    
+    /// 导航栏的主题颜色
+    public var mainColorCallback: (() -> (UIColor))?
+    
+    /// 其他控件的颜色
+    public var widgetColorCallback: (() -> (UIColor))?
+    
     //MARK:- 私有属性
     
     /// 管理器
@@ -95,7 +103,7 @@ public class ZDPhotoPickerController: UIViewController {
     /// 自定义导航栏
     private lazy var naviBar: ZDPhotoNaviBar = {
         let naviBar = ZDPhotoNaviBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: ZDConstant.kNavigationBarHeight))
-        naviBar.backgroundColor = .main
+        naviBar.backgroundColor = manager.mainColorCallback?() ?? UIColor.main
         naviBar.rightButton.setTitle("剪裁", for: .normal)
         naviBar.rightButton.isHidden = true
         return naviBar
@@ -160,7 +168,7 @@ public class ZDPhotoPickerController: UIViewController {
         button.addTarget(self, action: #selector(previewButtonAction), for: .touchUpInside)
         button.setTitle("预览", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        button.setTitleColor(UIColor.lightGreen, for: .normal)
+        button.setTitleColor(manager.widgetColorCallback?() ?? UIColor.lightGreen, for: .normal)
         button.setTitleColor(.gray, for: .disabled)
         return button
     }()
@@ -248,8 +256,8 @@ public class ZDPhotoPickerController: UIViewController {
         super.viewDidLoad()
         
         resetCachedAssets()
-        setUpUI()
         onInitData()
+        setUpUI()
         onInitEvent()
     }
     
@@ -305,9 +313,11 @@ public class ZDPhotoPickerController: UIViewController {
         manager.isShowSelectCount = isShowSelectCount
         manager.rowImageCount = rowImageCount
         manager.cropFrame = cropFrame
-        maxSelected = isAllowCropper ? 1 : maxSelected
         manager.maxSelected = maxSelected
         manager.maxVideoTime = maxVideoTime
+        manager.mainColorCallback = mainColorCallback
+        manager.widgetColorCallback = widgetColorCallback
+        maxSelected = isAllowCropper ? 1 : maxSelected
         
         //  判断是否授权
         ZDPhotoManager.default.authorizationStatus { (isOK) in
