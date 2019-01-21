@@ -296,7 +296,7 @@ public class ZDPhotoPickerController: UIViewController {
         view.addSubview(albumBackgroundView)
         view.addSubview(albumView)
         view.addSubview(naviBar)
-        view.bringSubview(toFront: naviBar)
+        view.bringSubviewToFront(naviBar)
     }
     
     //MARK:- 初始化数据

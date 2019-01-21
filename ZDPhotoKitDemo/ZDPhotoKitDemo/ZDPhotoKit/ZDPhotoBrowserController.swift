@@ -213,7 +213,7 @@ class ZDPhotoBrowserController: UIViewController {
         
         //  naviBar
         view.addSubview(naviBar)
-        view.bringSubview(toFront: naviBar)
+        view.bringSubviewToFront(naviBar)
         
         //  toolbar
         view.addSubview(toolbar)
@@ -223,7 +223,7 @@ class ZDPhotoBrowserController: UIViewController {
         
         //  下载按钮
         view.addSubview(downloanButton)
-        view.bringSubview(toFront: downloanButton)
+        view.bringSubviewToFront(downloanButton)
         
         //  事件
         onInitEvent()

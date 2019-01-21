@@ -121,7 +121,7 @@ class ZDPhotoCropController: UIViewController {
         }
         view.addSubview(ratioView)
         
-        view.bringSubview(toFront: naviBar)
+        view.bringSubviewToFront(naviBar)
         
         drawOverlayViewClipping()
         

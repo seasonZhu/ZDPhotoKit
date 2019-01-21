@@ -31,8 +31,8 @@ class ZDPhotoNaviBar: UIView {
         let backButton = UIButton(frame: CGRect(x: 0, y: top, width: 70, height: height))
         backButton.setImage(UIImage(namedInBundle: "navigationBar_back"), for: .normal)
         backButton.setImage(UIImage(namedInBundle: "navigationBar_back"), for: .highlighted)
-        backButton.imageEdgeInsets = UIEdgeInsetsMake(6.5, 7, 6.5, 33)
-        backButton.titleEdgeInsets = UIEdgeInsetsMake(0, -3, 0, 0)
+        backButton.imageEdgeInsets = UIEdgeInsets(top: 6.5, left: 7, bottom: 6.5, right: 33)
+        backButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -3, bottom: 0, right: 0)
         self.backButton = backButton
         
         let rightButton = UIButton(frame: CGRect(x: frame.width - 60, y: top, width: 60, height: height))

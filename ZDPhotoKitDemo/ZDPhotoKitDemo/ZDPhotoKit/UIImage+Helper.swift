@@ -25,13 +25,13 @@ extension UIImage {
                         maxDataSizeKBytes: Int,
                         callback: @escaping (_ data: Data, _ image: UIImage) -> ()) {
         DispatchQueue.global().async {
-            var data = UIImageJPEGRepresentation(originalImage, 1.0)
+            var data = originalImage.jpegData(compressionQuality: 1.0)
             guard var dataKBytes = data?.count else { return }
             print("原始的数据大小: \(dataKBytes)")
             var maxQuality: CGFloat = 0.99
             while dataKBytes > maxDataSizeKBytes && maxQuality > 0.02 {
                 maxQuality = maxQuality - 0.02
-                data = UIImageJPEGRepresentation(originalImage, maxQuality)
+                data = originalImage.jpegData(compressionQuality: maxQuality)
                 dataKBytes = (data?.count)!
                 print("压缩的数据大小: \(dataKBytes)")
                 print("压缩质量: \(maxQuality)")
@@ -53,7 +53,7 @@ extension UIImage {
     class func compressImage(image: UIImage,
                              maxDataSizeKBytes: Int) -> (image: UIImage, imageData: Data) {
         var compression: CGFloat = 1
-        var data = UIImageJPEGRepresentation(image, compression)
+        var data = image.jpegData(compressionQuality: compression)
         var dataBytes = data!.count
         if dataBytes < maxDataSizeKBytes { return (image, data!) }
         
@@ -62,7 +62,7 @@ extension UIImage {
         var min: CGFloat = 0
         for i in 0..<6 {
             compression = (max + min) / 2
-            data = UIImageJPEGRepresentation(image, compression)!
+            data = image.jpegData(compressionQuality: compression)
             dataBytes = data!.count
             print("第\(i)次压缩,系数=\(compression),图片大小\(dataBytes/1024)kb")
             if(dataBytes<maxDataSizeKBytes){ break }
@@ -81,14 +81,14 @@ extension UIImage {
     
     /// 压缩图片
     func compressImage(maxDataSizeKB: CGFloat) -> Data{
-        var resData:Data = UIImageJPEGRepresentation(self, 1)!
+        var resData:Data = self.jpegData(compressionQuality: 1)!
         let resDataSizeKB:CGFloat=CGFloat(resData.count/1024)
         if(resDataSizeKB<maxDataSizeKB){ return resData }
         
         let rate=resDataSizeKB/maxDataSizeKB
         var compression=1-0.05*rate
         for i in 0...10{
-            resData = UIImageJPEGRepresentation(self, compression)!
+            resData = self.jpegData(compressionQuality: compression)!
             if(CGFloat(resData.count/1024) < maxDataSizeKB){return resData}
             if(compression <= 0.45) {return resData}
             compression -= (rate-CGFloat(i+1))*0.025
@@ -167,7 +167,7 @@ extension UIImage {
         let asset = AVURLAsset(url: URL(fileURLWithPath: videoURL), options: nil)
         let root = AVAssetImageGenerator(asset: asset)
         root.appliesPreferredTrackTransform = true
-        let time = CMTimeMakeWithSeconds(0.0, 600)
+        let time = CMTimeMakeWithSeconds(0.0, preferredTimescale: 600)
         var actualTime = CMTime()
         var thumb: UIImage?
         do {
@@ -299,9 +299,9 @@ extension UIImage{
                           waterMarkTextFont:UIFont = UIFont.systemFont(ofSize: 20),
                           backgroundColor:UIColor = UIColor.clear) -> UIImage {
         
-        let textAttributes = [NSAttributedStringKey.foregroundColor:waterMarkTextColor,
-                              NSAttributedStringKey.font:waterMarkTextFont,
-                              NSAttributedStringKey.backgroundColor:backgroundColor]
+        let textAttributes = [NSAttributedString.Key.foregroundColor:waterMarkTextColor,
+                              NSAttributedString.Key.font:waterMarkTextFont,
+                              NSAttributedString.Key.backgroundColor:backgroundColor]
         let textSize = NSString(string: waterMarkText).size(withAttributes: textAttributes)
         var textFrame = CGRect(x: 0, y: 0, width: textSize.width, height: textSize.height)
         
@@ -349,10 +349,10 @@ extension UIImage {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = lineSapcing
         
-        let textAttributes = [NSAttributedStringKey.foregroundColor:textColor,
-                              NSAttributedStringKey.font:textFont,
-                              NSAttributedStringKey.backgroundColor:backgroundColor,
-                              NSAttributedStringKey.paragraphStyle: paragraph]
+        let textAttributes = [NSAttributedString.Key.foregroundColor:textColor,
+                              NSAttributedString.Key.font:textFont,
+                              NSAttributedString.Key.backgroundColor:backgroundColor,
+                              NSAttributedString.Key.paragraphStyle: paragraph]
         
         let textSize = NSString(string: string).size(withAttributes: textAttributes)
         let textFrame = CGRect(x: 0, y: 0, width: textSize.width, height: textSize.height)
@@ -385,10 +385,10 @@ extension UIImage {
         let paragraph = NSMutableParagraphStyle()
         //paragraph.lineSpacing = attrStr.yy_lineSpacing
         
-        let textAttributes = [NSAttributedStringKey.foregroundColor:textColor,
-                              NSAttributedStringKey.font:textFont,
-                              NSAttributedStringKey.backgroundColor:backgroundColor,
-                              NSAttributedStringKey.paragraphStyle: paragraph]
+        let textAttributes = [NSAttributedString.Key.foregroundColor:textColor,
+                              NSAttributedString.Key.font:textFont,
+                              NSAttributedString.Key.backgroundColor:backgroundColor,
+                              NSAttributedString.Key.paragraphStyle: paragraph]
         
         attrStr.addAttributes(textAttributes, range: NSRange.init(location: 0, length: attrStr.length))
         

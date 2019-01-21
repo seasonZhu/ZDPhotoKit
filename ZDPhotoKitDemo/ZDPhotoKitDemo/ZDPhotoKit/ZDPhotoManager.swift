@@ -325,7 +325,7 @@ public class ZDPhotoManager {
             
             let assetImageGenerator = AVAssetImageGenerator(asset: avAsset)
             assetImageGenerator.appliesPreferredTrackTransform = true
-            let time = CMTimeMakeWithSeconds(0, 1)
+            let time = CMTimeMakeWithSeconds(0, preferredTimescale: 1)
             var actualTime = CMTime()
             do {
                 let cgImage = try assetImageGenerator.copyCGImage(at: time, actualTime: &actualTime)
@@ -411,8 +411,8 @@ public class ZDPhotoManager {
         let buffer = UnsafePointer<Int8>(cOutPath)
         unlink(buffer)
         
-        let start = CMTimeMakeWithSeconds(0, asset.duration.timescale)
-        let range = CMTimeRangeMake(start, asset.duration)
+        let start = CMTimeMakeWithSeconds(0, preferredTimescale: asset.duration.timescale)
+        let range = CMTimeRangeMake(start: start, duration: asset.duration)
         
         guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetMediumQuality) else {
             callback(nil)

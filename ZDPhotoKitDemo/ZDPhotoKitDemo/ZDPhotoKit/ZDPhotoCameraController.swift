@@ -298,7 +298,7 @@ class ZDPhotoCameraController: UIViewController {
         
         //  视频输出
         videoOutput = AVCaptureMovieFileOutput()
-        videoOutput.movieFragmentInterval = kCMTimeInvalid
+        videoOutput.movieFragmentInterval = CMTime.invalid
         if captureSession.canAddOutput(videoOutput) {
             captureSession.addOutput(videoOutput)
         }
@@ -560,7 +560,7 @@ class ZDPhotoCameraController: UIViewController {
     
     @objc private func playTheVideoEnd() {
         if player != nil {
-            player.seek(to: kCMTimeZero)
+            player.seek(to: CMTime.zero)
             player.play()
         }
         //player.pause()
@@ -636,8 +636,8 @@ extension ZDPhotoCameraController {
         if cameraCount > 1 {
             let animation = CATransition()
             animation.duration = 0.5
-            animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            animation.type = "oglFlip"
+            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            animation.type = CATransitionType(rawValue: "oglFlip")
             
             var newCamera: AVCaptureDevice?
             var newInput: AVCaptureDeviceInput?
@@ -646,10 +646,10 @@ extension ZDPhotoCameraController {
             
             if position == .front {
                 newCamera = camera(position: .back)
-                animation.subtype = kCATransitionFromLeft
+                animation.subtype = CATransitionSubtype.fromLeft
             }else {
                 newCamera = camera(position: .front)
-                animation.subtype = kCATransitionFromRight
+                animation.subtype = CATransitionSubtype.fromRight
             }
             
             do {
@@ -679,7 +679,7 @@ extension ZDPhotoCameraController: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
         timeLabel.isHidden = false
         videoTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(videoTimeChange), userInfo: nil, repeats: true)
-        RunLoop.current.add(videoTimer!, forMode: .commonModes)
+        RunLoop.current.add(videoTimer!, forMode: RunLoop.Mode.common)
     }
     
     
@@ -714,14 +714,14 @@ extension ZDPhotoCameraController {
         let videoTrack = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
         
         do {
-            try videoTrack?.insertTimeRange(CMTimeRangeMake(kCMTimeZero, asset.duration), of: asset.tracks(withMediaType: .video)[0], at: kCMTimeZero)
+            try videoTrack?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: asset.duration), of: asset.tracks(withMediaType: .video)[0], at: CMTime.zero)
             
             if audioTrack != nil {
                 let compositionAudioTrack = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 
                 
                 do {
-                    try compositionAudioTrack?.insertTimeRange(CMTimeRangeMake(kCMTimeZero, asset.duration), of: audioTrack!, at: kCMTimeZero)
+                    try compositionAudioTrack?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: asset.duration), of: audioTrack!, at: CMTime.zero)
                 }catch {
                     
                 }
@@ -729,7 +729,7 @@ extension ZDPhotoCameraController {
             }
             
             let mainInstruction = AVMutableVideoCompositionInstruction()
-            mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration)
+            mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: asset.duration)
             
             let videolayerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack!)
             
@@ -740,7 +740,7 @@ extension ZDPhotoCameraController {
                 return
             }
             
-            var videoAssetOrientation: UIImageOrientation = .up
+            var videoAssetOrientation: UIImage.Orientation = .up
             var isVideoAssetPortrait = false
             
             let videoTransform = videoAssetTrack?.preferredTransform
@@ -781,22 +781,22 @@ extension ZDPhotoCameraController {
             if isVideoAssetPortrait {
                 if videoAssetOrientation == .right {
                     t1 = (videoTransform?.translatedBy(x:  -(videoWidth / 2 - videoHeight / 2), y: 0))!
-                    videolayerInstruction.setTransform(t1, at: kCMTimeZero)
+                    videolayerInstruction.setTransform(t1, at: CMTime.zero)
                 }else if videoAssetOrientation == .left {
                     t1 = (videoTransform?.scaledBy(x: 1, y: 1))!
                     t2 = t1.translatedBy(x: -(videoWidth / 2 - videoHeight - videoHeight / 4), y: 0)
-                    videolayerInstruction.setTransform(t2, at: kCMTimeZero)
+                    videolayerInstruction.setTransform(t2, at: CMTime.zero)
                 }
             }else {
                 if videoAssetOrientation == .up {
                     t1 = (videoTransform?.scaledBy(x: 1.77778, y: 1.77778))!
                     t2 = t1.translatedBy(x: videoHeight / 2 - videoWidth / 2, y: 0)
-                    videolayerInstruction.setTransform(t2, at: kCMTimeZero)
+                    videolayerInstruction.setTransform(t2, at: CMTime.zero)
                 }else {
                     t1 = (videoTransform?.scaledBy(x: 1.77778, y: 1.77778))!
                     t2 = t1.translatedBy(x: videoHeight / 2 - videoWidth / 2, y: -(videoHeight / 16 * 7))
                 }
-                videolayerInstruction.setTransform(t2, at: kCMTimeZero)
+                videolayerInstruction.setTransform(t2, at: CMTime.zero)
             }
             
             videolayerInstruction.setOpacity(0.0, at: asset.duration)
@@ -819,7 +819,7 @@ extension ZDPhotoCameraController {
             mainCompositionInst.renderSize = CGSize(width: renderWidth, height: renderHeight)
             
             mainCompositionInst.instructions = [mainInstruction]
-            mainCompositionInst.frameDuration = CMTimeMake(1, 30)
+            mainCompositionInst.frameDuration = CMTimeMake(value: 1, timescale: 30)
             
             let outPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first! + "/outVideo.mp4"
             
