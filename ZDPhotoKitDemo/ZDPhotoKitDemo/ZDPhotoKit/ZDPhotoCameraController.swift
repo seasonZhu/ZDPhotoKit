@@ -43,7 +43,7 @@ class ZDPhotoCameraController: UIViewController {
     
     ///  视频层
     private lazy var layerView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0/*ZDConstant.kNavigationBarHeight*/, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenHeight - ZDConstant.kBottomSafeHeight))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenHeight - ZDConstant.kBottomSafeHeight))
         view.backgroundColor = UIColor.black
         return view
     }()
@@ -86,7 +86,7 @@ class ZDPhotoCameraController: UIViewController {
     ///  时间label
     private lazy var timeLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: 0,
-                                          y: ZDConstant.kScreenHeight - ZDConstant.kBottomSafeHeight - 150,/*layerView.frame.origin.y + layerView.frame.size.height,*/
+                                          y: ZDConstant.kScreenHeight - ZDConstant.kBottomSafeHeight - 150,
                                           width: ZDConstant.kScreenWidth,
                                           height: 20))
         label.textColor = UIColor.white
@@ -698,7 +698,7 @@ extension ZDPhotoCameraController: AVCaptureFileOutputRecordingDelegate {
 
 //MARK:- 压缩视频相关
 extension ZDPhotoCameraController {
-    private func clipVideo(success: @escaping () -> (), fail: @escaping () -> ()) {
+    private func clipVideo(success: @escaping () -> Void, fail: @escaping () -> Void) {
         let asset = AVAsset(url: videoUrl)
         
         var audioTrack: AVAssetTrack?

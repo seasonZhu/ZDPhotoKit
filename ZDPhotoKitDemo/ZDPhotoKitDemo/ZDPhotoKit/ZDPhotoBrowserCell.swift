@@ -59,7 +59,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
     }()
     
     //  控制器消失的回调
-    var dismissCallback: (() -> ())?
+    var dismissCallback: (() -> Void)?
     
     /// asset模型
     private var newAsset = ZDAssetModel()
