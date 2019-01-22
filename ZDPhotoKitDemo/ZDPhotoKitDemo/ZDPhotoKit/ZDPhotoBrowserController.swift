@@ -77,7 +77,6 @@ class ZDPhotoBrowserController: UIViewController {
         //  collectionView初始化
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.register(ZDPhotoBrowserCell.self, forCellWithReuseIdentifier: "ZDPhotoBrowserCell")
-        //collectionView.register(ZDVideoBrowserCell.self, forCellWithReuseIdentifier: "ZDVideoBrowserCell")
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true
@@ -386,8 +385,11 @@ extension ZDPhotoBrowserController: UICollectionViewDelegate, UICollectionViewDa
         cell.asset = asset
         
         cell.dismissCallback = { [weak self] in
-            //self?.dismiss(animated: false, completion: nil)
-            self?.navigationController?.popViewController(animated: true)
+            if let _ = self?.navigationController {
+                self?.navigationController?.popViewController(animated: true)
+            }else {
+                self?.dismiss(animated: false, completion: nil)
+            }
         }
         return cell
     }
@@ -415,7 +417,7 @@ extension ZDPhotoBrowserController: UICollectionViewDelegate, UICollectionViewDa
             })
             naviBar.rightButton.tag = indexPath.item
             
-            //  现实当前图片的大小
+            //  获取当前图片的大小
             ZDPhotoManager.default.getPhotosSize(models: [cell.asset]) { (sizeString, size) in
                 self.imagesSizeLabel.text = sizeString
             }

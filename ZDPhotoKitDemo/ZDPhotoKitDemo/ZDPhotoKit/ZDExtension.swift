@@ -99,12 +99,15 @@ extension UIImage {
     ///
     /// - Parameter image: 原图片
     /// - Returns: 新图片
-    static func normalizedImage(_ image: UIImage) -> UIImage {
+    static func normalizedImage(_ image: UIImage) -> UIImage? {
         if image.imageOrientation == .up { return image }
         UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+        defer {
+            UIGraphicsEndImageContext()
+        }
         image.draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: image.size))
         let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return normalizedImage!
+        
+        return normalizedImage
     }
 }

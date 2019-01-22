@@ -71,10 +71,10 @@ class ZDAlbumListViewCell: UITableViewCell {
             if newValue.albumImage != nil {
                 photoView.image = newValue.albumImage
             }else {
-                ZDPhotoManager.default.getPhoto(asset: newValue.asset ?? PHAsset(), targetSize: CGSize(width: 60, height: 60), callback: { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: newValue.asset ?? PHAsset(), targetSize: CGSize(width: 60, height: 60)) { (image, dict) in
                     self.photoView.image = image
                     newValue.albumImage = image
-                })
+                }
             }
             
             self.selectedLabel.text = "\(newValue.selectCount)"

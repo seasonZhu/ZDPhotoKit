@@ -34,7 +34,7 @@ public class ZDPhotoPickerController: UIViewController {
     /// 允许进行剪裁
     public var isAllowCropper = false
     
-    /// 相册页面允许展示Live图效果
+    /// 相册页面允许展示Live图效果 这个还是选择为false一口气很多cell的livephoto会导致内存问题(Message from debugger: Terminated due to memory issue)
     public var isAllowShowLive = false
     
     /// 相册页面允许展示Gif图效果
@@ -67,7 +67,7 @@ public class ZDPhotoPickerController: UIViewController {
     public var selectCropImageCallback: ((UIImage?) -> Void)?
     
     /// 拍照的闭包
-    public var takePhotoCallback: ((UIImage) -> Void)?
+    public var takePhotoCallback: ((UIImage?) -> Void)?
     
     /// 选择的视频
     public var takeVideoCallback: ((UIImage?, String) -> Void)?
@@ -265,14 +265,14 @@ public class ZDPhotoPickerController: UIViewController {
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-        //navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     //MARK:- viewWillDisappear
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
-        //navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     //MARK:- 内存告警
@@ -322,24 +322,24 @@ public class ZDPhotoPickerController: UIViewController {
         //  判断是否授权
         ZDPhotoManager.default.authorizationStatus { (isOK) in
             if isOK {
-                ZDPhotoManager.default.getAllAlbums(allowPickingVideo: self.isAllowVideo, allowPickingImage: true, callback: { (albums) in
+                ZDPhotoManager.default.getAllAlbums(allowPickingVideo: self.isAllowVideo, allowPickingImage: true) { (albums) in
                     self.albums = albums
                     guard let model = albums.first else { return }
                     self.naviBar.setTitle(model.name)
                     
                     //  获取既有视频又有图片的资源数组
-                    ZDPhotoManager.default.getAllAssetOfAlbum(model: model, allowPickingVideo: self.isAllowVideo, allowPickingImage: true, callback: { (assets) in
+                    ZDPhotoManager.default.getAllAssetOfAlbum(model: model, allowPickingVideo: self.isAllowVideo, allowPickingImage: true) { (assets) in
                         self.refreshCollectionView(assets: assets)
-                    })
+                    }
                     
                     //  获取只有图片的资源数组
-                    ZDPhotoManager.default.getAllAssetOfAlbum(model: model, allowPickingVideo: false, allowPickingImage: true, callback: { (assets) in
+                    ZDPhotoManager.default.getAllAssetOfAlbum(model: model, allowPickingVideo: false, allowPickingImage: true) { (assets) in
                         self.noVideoAssets = assets
-                    })
+                    }
                     
-                })
+                }
             }else {
-                
+                self.showAlertViewController()
             }
         }
     }
@@ -413,9 +413,9 @@ public class ZDPhotoPickerController: UIViewController {
                 })
             })
             
-            UIView.animate(withDuration: 0.45, animations: {
+            UIView.animate(withDuration: 0.45) {
                 self.albumBackgroundView.alpha = 1.0
-            })
+            }
         }else {
             UIView.animate(withDuration: 0.45, animations: {
                 self.albumBackgroundView.alpha = 0.0
@@ -586,6 +586,29 @@ public class ZDPhotoPickerController: UIViewController {
         }
     }
     
+    //MARK:- 照片权限的弹窗
+    private func showAlertViewController() {
+        
+        let appName = (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String) ?? ""
+        let message = "\"\(appName)\"没有照片访问权限，请前往\"设置-隐私-照片\"选项中，允许访问照片!"
+        
+        let alertController: UIAlertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let actionCancel: UIAlertAction = UIAlertAction(title: "取消", style: .default) { (UIAlertAction) in
+            
+        }
+        let actionOK: UIAlertAction = UIAlertAction(title: "设置", style: .default) { (UIAlertAction) in
+            guard let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) else {
+                return
+            }
+            
+            UIApplication.shared.openURL(url)
+        }
+        alertController.addAction(actionCancel)
+        alertController.addAction(actionOK)
+        
+        UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
+    }
+    
     //MARK:- 去剪裁界面
     private func pushToPhotoCropController() {
         
@@ -709,13 +732,13 @@ extension ZDPhotoPickerController: ZDAlbumListViewDelegate {
         albumBackgroundViewAction()
         naviBar.setTitle(item.name)
         
-        ZDPhotoManager.default.getAllAssetOfAlbum(model: item, allowPickingVideo: isAllowVideo, allowPickingImage: true, callback: { (assets) in
+        ZDPhotoManager.default.getAllAssetOfAlbum(model: item, allowPickingVideo: isAllowVideo, allowPickingImage: true) { (assets) in
             self.refreshCollectionView(assets: assets)
-        })
+        }
         
-        ZDPhotoManager.default.getAllAssetOfAlbum(model: item, allowPickingVideo: false, allowPickingImage: true, callback: { (assets) in
+        ZDPhotoManager.default.getAllAssetOfAlbum(model: item, allowPickingVideo: false, allowPickingImage: true) { (assets) in
             self.noVideoAssets = assets
-        })
+        }
 
     }
 }

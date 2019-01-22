@@ -30,17 +30,17 @@ class ViewController: UIViewController {
         picker.isAllowCropper = false
         picker.isAllowCaputreVideo = true
         picker.isAllowTakePhoto = true
-        picker.isAllowShowLive = true
+        picker.isAllowShowLive = false 
         picker.isAllowShowGif = true
         picker.isShowSelectCount = true
         picker.maxSelected = 5
         picker.rowImageCount = 7
-        picker.mainColorCallback = {
-            return UIColor.lightGray
-        }
-        picker.widgetColorCallback = {
-            return UIColor.black
-        }
+//        picker.mainColorCallback = {
+//            return UIColor.lightGray
+//        }
+//        picker.widgetColorCallback = {
+//            return UIColor.black
+//        }
         
         let navi = UINavigationController(rootViewController: picker)
         present(navi, animated: true, completion: nil)

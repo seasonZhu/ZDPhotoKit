@@ -132,11 +132,10 @@ class ZDPhotoCell: UICollectionViewCell {
                     imageView.addGestureRecognizer(longTap)
                 }
                 
-                ZDPhotoManager.default.getGif(asset: asset, callback: { (data, image) in
-                    //self.imageView.animatedImage = FLAnimatedImage(gifData: data)
-                    //self.imageView.image = image
+                ZDPhotoManager.default.getGif(asset: asset) { (data, image) in
+                    //self.imageView.image = image (这个太消耗性能了)
                     self.imageView.image = image?.images?.first
-                })
+                }
             }else if newValue.subType == .live {
                 
                 //  允许展示LivePhoto 添加长按手势
@@ -145,7 +144,7 @@ class ZDPhotoCell: UICollectionViewCell {
                     livePhoteView.addGestureRecognizer(longTap)
                 }
                 
-                ZDPhotoManager.default.getLivePhoto(asset: asset, targetSize: CGSize(width: 150, height: 150), callback: { (livePhoto, image, url) in
+                ZDPhotoManager.default.getLivePhoto(asset: asset, targetSize: CGSize(width: 150, height: 150)) { (livePhoto, image, url) in
                     if ZDPhotoManager.default.isAllowShowLive {
                         self.livePhoteView.isHidden = false
                         self.livePhoteView.livePhoto = livePhoto
@@ -156,11 +155,11 @@ class ZDPhotoCell: UICollectionViewCell {
                         self.imageView.image = image
                     }
 
-                })
+                }
             }else {
-                ZDPhotoManager.default.getPhoto(asset: asset, targetSize: CGSize(width: 150, height: 150), callback: { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: asset, targetSize: CGSize(width: 150, height: 150)) { (image, dict) in
                     self.imageView.image = image
-                })
+                }
             }
             
         }get {
@@ -393,15 +392,15 @@ class ZDPhotoCell: UICollectionViewCell {
         //  不使用全局的变量 这样用完了就销毁 内存消耗更少
         
         if longPress.state == .began {
-            ZDPhotoManager.default.getGif(asset: asset.asset, callback: { (data, image) in
+            ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image) in
                 //self.imageView.image = nil
                 self.imageView.image = image
-            })
+            }
         }else if longPress.state == .ended {
-            ZDPhotoManager.default.getGif(asset: asset.asset, callback: { (data, image) in
+            ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image) in
                 //self.imageView.image = nil
                 self.imageView.image = image?.images?.first
-            })
+            }
         }
     }
     
@@ -417,15 +416,15 @@ class ZDPhotoCell: UICollectionViewCell {
     /// 播放动画
     private func playAnimation() {
         UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: .allowUserInteraction, animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2) {
                 self.selectCellButton.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-            })
+            }
             
-            UIView.addKeyframe(withRelativeStartTime: 0.2, relativeDuration: 0.4, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.2, relativeDuration: 0.4) {
                 self.selectCellButton.transform = CGAffineTransform.identity
-            })
+            }
             
-        }, completion: nil)
+        })
     }
     
     //MARK:- 析构函数

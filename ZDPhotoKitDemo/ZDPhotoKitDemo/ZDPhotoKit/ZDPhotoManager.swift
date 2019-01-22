@@ -567,7 +567,7 @@ extension ZDPhotoManager {
     /// - Parameter dataCount: 数据长度
     /// - Returns: 数据字符串
     private func getBytes(dataCount: Int) -> String {
-        var bytes = ""
+        let bytes: String
         if dataCount >= Int(0.1 * 1024 * 1024) {
             bytes = String(format: "%0.1fM",Double(dataCount) / 1024 / 1024.0)
         }else if dataCount >= 1024 {

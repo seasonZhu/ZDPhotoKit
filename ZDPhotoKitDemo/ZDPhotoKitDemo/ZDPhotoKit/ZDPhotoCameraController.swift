@@ -186,7 +186,7 @@ class ZDPhotoCameraController: UIViewController {
     private var videoQueue: DispatchQueue!
     
     ///  全局的最终拍摄的照片
-    private var finalPhoto = UIImage()
+    private var finalPhoto: UIImage?
     
     ///  全局的拍摄视频的定时器
     private var videoTimer: Timer?
@@ -509,7 +509,7 @@ class ZDPhotoCameraController: UIViewController {
             guard imageDataSampleBuffer != nil, error == nil else { return }
             guard let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer!) else { return }
             guard let image = UIImage(data: data) else { return }
-            var fixImage = image
+            var fixImage: UIImage? = image
             if image.imageOrientation != .up {
                 fixImage = UIImage.normalizedImage(image)
             }

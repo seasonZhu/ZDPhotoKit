@@ -45,7 +45,6 @@ public enum ZDAssetSubType {
         
         let extStr = fileName.pathExtension as String
         if extStr == "GIF" {
-            print("是GIF")
             return gif
         }
         return normal

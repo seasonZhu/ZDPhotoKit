@@ -182,7 +182,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
         //  移除手势
         if let gestures = imageView.gestureRecognizers {
             for gesture in gestures {
-                if gesture.isKind(of: UILongPressGestureRecognizer.self) {
+                if gesture is UILongPressGestureRecognizer {
                     imageView.removeGestureRecognizer(gesture)
                 }
             }
@@ -190,7 +190,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
         
         if let gestures = livePhoteView.gestureRecognizers {
             for gesture in gestures {
-                if gesture.isKind(of: UILongPressGestureRecognizer.self) {
+                if gesture is UILongPressGestureRecognizer {
                     livePhoteView.removeGestureRecognizer(gesture)
                 }
             }
@@ -237,9 +237,9 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
             
             if model.subType == .gif {
                 
-                ZDPhotoManager.default.getGif(asset: model.asset, callback: { (data, image) in
+                ZDPhotoManager.default.getGif(asset: model.asset) { (data, image) in
                     self.imageView.image = image
-                })
+                }
             }else if model.subType == .live {
                 
                 imageView.isHidden = true
@@ -249,15 +249,15 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
                 let longTap = UILongPressGestureRecognizer(target: self, action: #selector(livePhotoStart(_ :)))
                 livePhoteView.addGestureRecognizer(longTap)
                 
-                ZDPhotoManager.default.getLivePhoto(asset: model.asset, targetSize: bounds.size, callback: { (livePhoto, image, url) in
+                ZDPhotoManager.default.getLivePhoto(asset: model.asset, targetSize: bounds.size) { (livePhoto, image, url) in
                     self.livePhoteView.livePhoto = livePhoto
                     self.livePhoteView.isMuted = true
                     self.livePhoteView.startPlayback(with: .full)
-                })
+                }
             }else {
-                ZDPhotoManager.default.getPhoto(asset: model.asset, targetSize: bounds.size, callback: { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: model.asset, targetSize: bounds.size) { (image, dict) in
                     self.imageView.image = image
-                })
+                }
             }
         }
     }
