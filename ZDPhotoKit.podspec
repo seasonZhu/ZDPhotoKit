@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "ZDPhotoKit"
-  s.version      = "0.0.3"
-  s.summary      = "A Photo Select in Swift"
+  s.version      = "0.0.4"
+  s.summary      = "A Photo Select by Swift"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-                  A Photo Select in Swift 基于Swift编写的图片选择框架
+                  A Photo Select by Swift 基于Swift编写的图片选择框架
                    DESC
 
   s.homepage     = "https://github.com/seasonZhu/ZDPhotoKit"
@@ -96,7 +96,7 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = "Classes/**/*.h"
 
-  s.swift_version = '4.0'
+  s.swift_version = '4.2'
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
   #  A list of resources included with the Pod. These are copied into the
@@ -105,7 +105,7 @@ Pod::Spec.new do |s|
   #  non-essential files like tests, examples and documentation.
   #
 
-  s.resource  = "ZDPhotoKitDemo/ZDPhotoKitDemo/ZDPhotoKit/ZPhoto.bundle"
+  s.resource  = "ZDPhotoKitDemo/ZDPhotoKitDemo/ZDPhotoKit/ZDPhoto.bundle"
   # s.resources = "Resources/*.png"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
