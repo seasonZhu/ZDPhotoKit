@@ -74,7 +74,7 @@ class ZDPhotoCameraCell: UICollectionViewCell {
     
     //MARK:- 配置相机
     private  func configCamera() {
-        device = cameraWithPosition(.back)
+        device = camera(position: .back)
         guard let device = device else {return}
         do {
             input = try AVCaptureDeviceInput(device: device)
@@ -95,12 +95,10 @@ class ZDPhotoCameraCell: UICollectionViewCell {
         session?.startRunning()
     }
     
-    private func cameraWithPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice?{
+    private func camera(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = AVCaptureDevice.devices(for: .video)
-        for device in devices  {
-            if device.position == position {
-                return device
-            }
+        for device in devices where device.position == position  {
+            return device
         }
         return nil
     }

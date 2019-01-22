@@ -106,7 +106,7 @@ class ZDPhotoCell: UICollectionViewCell {
             //  移除手势
             if let gestures = imageView.gestureRecognizers {
                 for gesture in gestures {
-                    if gesture.isKind(of: UILongPressGestureRecognizer.self) {
+                    if gesture is UILongPressGestureRecognizer {
                         imageView.removeGestureRecognizer(gesture)
                     }
                 }
@@ -114,7 +114,7 @@ class ZDPhotoCell: UICollectionViewCell {
             
             if let gestures = livePhoteView.gestureRecognizers {
                 for gesture in gestures {
-                    if gesture.isKind(of: UILongPressGestureRecognizer.self) {
+                    if gesture is UILongPressGestureRecognizer {
                         livePhoteView.removeGestureRecognizer(gesture)
                     }
                 }
@@ -133,8 +133,7 @@ class ZDPhotoCell: UICollectionViewCell {
                 }
                 
                 ZDPhotoManager.default.getGif(asset: asset) { (data, image) in
-                    //self.imageView.image = image (这个太消耗性能了)
-                    self.imageView.image = image?.images?.first
+                    self.imageView.image = image?.images?.first //最好不要直接赋值回调中的image 这个是gif 同时加载很多内存吃不消
                 }
             }else if newValue.subType == .live {
                 
@@ -393,12 +392,10 @@ class ZDPhotoCell: UICollectionViewCell {
         
         if longPress.state == .began {
             ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image) in
-                //self.imageView.image = nil
                 self.imageView.image = image
             }
         }else if longPress.state == .ended {
             ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image) in
-                //self.imageView.image = nil
                 self.imageView.image = image?.images?.first
             }
         }

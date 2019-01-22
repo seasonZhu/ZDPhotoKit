@@ -509,15 +509,12 @@ class ZDPhotoCameraController: UIViewController {
             guard imageDataSampleBuffer != nil, error == nil else { return }
             guard let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer!) else { return }
             guard let image = UIImage(data: data) else { return }
-            var fixImage: UIImage? = image
-            if image.imageOrientation != .up {
-                fixImage = UIImage.normalizedImage(image)
-            }
+            let fixImage = image.fixOrientation
             DispatchQueue.main.async {
                 self.buttonAnimationOpen()
                 //self.finalPhoto = self.squareButton.isSelected ? fixImage.clipSquareImage(scale: 1.0) : fixImage
                 self.finalPhoto = fixImage
-                self.maskView.image = self.finalPhoto
+                self.maskView.image = fixImage
             }
         }
     }

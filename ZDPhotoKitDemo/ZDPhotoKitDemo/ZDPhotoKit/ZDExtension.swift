@@ -95,19 +95,66 @@ extension UIImage {
         return thumb
     }
     
-    /// 规范化图片
-    ///
-    /// - Parameter image: 原图片
-    /// - Returns: 新图片
-    static func normalizedImage(_ image: UIImage) -> UIImage? {
-        if image.imageOrientation == .up { return image }
-        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        image.draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: image.size))
-        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+    /// 修正图片
+    var fixOrientation: UIImage? {
         
-        return normalizedImage
+        if imageOrientation == .up {
+            return self
+        }
+        
+        // We need to calculate the proper transformation to make the image upright.
+        // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+        var transform: CGAffineTransform = .identity
+        switch imageOrientation {
+        case .down, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(Double.pi))
+        case .left, .leftMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: CGFloat(Double.pi / 2))
+        case .right, .rightMirrored:
+            transform = transform.translatedBy(x: 0, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(Double.pi / 2))
+        default:
+            break
+        }
+        
+        switch self.imageOrientation {
+        case .upMirrored, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        case .leftMirrored, .rightMirrored:
+            transform = transform.translatedBy(x: self.size.height, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        default:
+            break
+        }
+        
+        // Now we draw the underlying CGImage into a new context, applying the transform
+        // calculated above.
+        guard let cgImage = self.cgImage, let colorSpace = cgImage.colorSpace else { return nil }
+        
+        //这里需要注意下CGImageGetBitmapInfo，它的类型是Int32的，CGImageGetBitmapInfo(aImage.CGImage).rawValue，这样写才不会报错
+        guard let ctx = CGContext(data: nil,
+                                  width: Int(size.width),
+                                  height: Int(size.height),
+                                  bitsPerComponent: cgImage.bitsPerComponent,
+                                  bytesPerRow: 0,
+                                  space: colorSpace,
+                                  bitmapInfo: cgImage.bitmapInfo.rawValue) else {
+                                    return nil
+        }
+        ctx.concatenate(transform)
+        switch imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored:
+            draw(in: CGRect(x: 0, y: 0,  width: self.size.height, height: self.size.width))
+        default:
+            draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        }
+        
+        // And now we just create a new UIImage from the drawing context
+        guard let cgimg = ctx.makeImage() else { return nil }
+        let img = UIImage(cgImage: cgimg)
+        return img
     }
 }
