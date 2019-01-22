@@ -265,14 +265,14 @@ public class ZDPhotoPickerController: UIViewController {
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        //navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     //MARK:- viewWillDisappear
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
-        navigationController?.setNavigationBarHidden(false, animated: false)
+        //navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     //MARK:- 内存告警
@@ -364,7 +364,8 @@ public class ZDPhotoPickerController: UIViewController {
     //MARK:- 点击事件
     
     //  返回事件
-    @objc private func backAction() {
+    @objc
+    private func backAction() {
         
         //  不知道为啥 这个相册在dissmiss的时候回在最顶层 然后再消失 这里先隐藏处理
         albumView.isHidden = true
@@ -377,7 +378,8 @@ public class ZDPhotoPickerController: UIViewController {
     }
     
     //  点击了完成按钮
-    @objc private func selectImageComplete() {
+    @objc
+    private func selectImageComplete() {
         print("从完成按钮这里进行点击事件")
         selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
         dismiss(animated: true)
@@ -513,6 +515,11 @@ public class ZDPhotoPickerController: UIViewController {
             //  数组移除
             selectAssets.removeZDAssetModel(cell.asset)
             
+            //  重新进行排序工作
+            for (index, asset) in selectAssets.enumerated() {
+                asset.selectNum = index + 1
+            }
+            
             //  改变完成按钮数字
             imageCompleteButton.number = self.selectAssets.count
             if selectAssets.count == 0 {
@@ -534,9 +541,19 @@ public class ZDPhotoPickerController: UIViewController {
         
         //  如果显示编号 需要刷新
         if isShowSelectCount {
+            
+            //  获取当前collectionView的可见cell的多媒体和选择数组的多媒体相同,筛选出其indexPath,并进行刷新
+            let cells = collectionView.visibleCells
+            let photoCells = cells.filter { return $0 is ZDPhotoCell } as! [ZDPhotoCell]
+            var refreshIndexPaths = [IndexPath]()
+            for photoCell in photoCells where selectAssets.contains(where: { $0.asset == photoCell.asset.asset }) {
+                refreshIndexPaths.append(photoCell.asset.indexPath)
+            }
+            
             UIView.performWithoutAnimation {
-                self.collectionView.reloadData()
+                //self.collectionView.reloadData()
                 //self.collectionView.reloadItems(at: [indexPath])
+                self.collectionView.reloadItems(at: refreshIndexPaths)
             }
         }
     }
@@ -654,6 +671,7 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
             let asset = assets[indexPath.item]
             asset.isSelect = false
             asset.selectNum = 0
+            asset.indexPath = indexPath
             
             //  保证在滑动的过程中 被选中的cell被正确的找到
             for (index,selectAsset) in selectAssets.enumerated() {
