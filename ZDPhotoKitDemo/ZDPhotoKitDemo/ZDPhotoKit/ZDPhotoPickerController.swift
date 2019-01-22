@@ -515,11 +515,6 @@ public class ZDPhotoPickerController: UIViewController {
             //  数组移除
             selectAssets.removeZDAssetModel(cell.asset)
             
-            //  重新进行排序工作
-            for (index, asset) in selectAssets.enumerated() {
-                asset.selectNum = index + 1
-            }
-            
             //  改变完成按钮数字
             imageCompleteButton.number = self.selectAssets.count
             if selectAssets.count == 0 {
