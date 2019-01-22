@@ -39,7 +39,7 @@ struct ZDConstant {
 
 
 /// ZDPhoto.bundle
-public let ZDPhotoBundle: Bundle? = {
+let ZDPhotoBundle: Bundle? = {
     let bundle = Bundle(path: Bundle(for: ZDPhotoPickerController.classForCoder()).resourcePath! + "/ZDPhoto.bundle")
     return bundle
 }()

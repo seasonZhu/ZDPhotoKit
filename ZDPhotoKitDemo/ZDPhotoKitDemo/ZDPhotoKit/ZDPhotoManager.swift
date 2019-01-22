@@ -467,7 +467,8 @@ public class ZDPhotoManager {
     func showAlert(controller: UIViewController, message: String? = nil) {
         //弹出提示
         let title = message ?? "你最多只能选择\(maxSelected)张照片"
-        // 原生UIAlertController
+        
+        // 原生UIAlertController 我这个并没有使用第三方是为了避免耦合 当然这里可以搞个闭包 让用户自定义
         let alertController = UIAlertController(title: title, message: nil,
                                                 preferredStyle: .alert)
         
@@ -490,7 +491,7 @@ extension ZDPhotoManager {
         
         let model = ZDAlbumModel()
         model.result = result
-        model.name = titleOfAlbumForChinse(title: name)
+        model.name = titleOfAlbumForChinese(title: name)
         
         var count = 0
         result.enumerateObjects { (asset, index, nil) in
@@ -527,7 +528,7 @@ extension ZDPhotoManager {
     ///
     /// - Parameter title: 英文
     /// - Returns: 中文
-    private func titleOfAlbumForChinse(title: String) -> String {
+    private func titleOfAlbumForChinese(title: String) -> String {
         if title == "Slo-mo" {
             return "慢动作"
         } else if title == "Recently Added" {
