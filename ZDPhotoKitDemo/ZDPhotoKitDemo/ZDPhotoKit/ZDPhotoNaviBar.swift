@@ -18,11 +18,11 @@ class ZDPhotoNaviBar: UIView {
     
     var titleButton: ZDPhotoTitleButton
     
-    var backButtonCallback: ((UIButton) -> ())?
+    var backButtonCallback: ((UIButton) -> Void)?
     
-    var rightButtonCallback: ((UIButton) -> ())?
+    var rightButtonCallback: ((UIButton) -> Void)?
     
-    var titleButtonCallback: ((ZDPhotoTitleButton) -> ())?
+    var titleButtonCallback: ((ZDPhotoTitleButton) -> Void)?
     
     //MARK:- 初始化
     override init(frame: CGRect) {

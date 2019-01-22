@@ -161,7 +161,6 @@ class ZDPhotoCropController: UIViewController {
         //  这个回调会调用两次 第一次拿的模糊的图 第二次拿的是高清图 其实我们要拿第二次的
         ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, _) in
             guard let originalImage = image, originalImage.size.width > 0 && originalImage.size.height > 0 else {
-                SwiftProgressHUD.showOnlyText("图片参数有误!")
                 return
             }
             

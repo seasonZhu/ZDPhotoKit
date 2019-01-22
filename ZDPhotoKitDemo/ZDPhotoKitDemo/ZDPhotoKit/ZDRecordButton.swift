@@ -32,13 +32,13 @@ class ZDRecordButton: UIButton {
     }
     
     //  开始的回调
-    var startCallback: (() -> ())?
+    var startCallback: (() -> Void)?
     
     //  相机使用的回调
-    var photoCallback: (() -> ())?
+    var photoCallback: (() -> Void)?
     
     //  完成的回调
-    var finishCallback: ((_ totalSecond: CGFloat) -> ())?
+    var finishCallback: ((_ totalSecond: CGFloat) -> Void)?
     
     //  全局时间
     private var second: CGFloat = 0
@@ -55,6 +55,7 @@ class ZDRecordButton: UIButton {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     //MARK:- 对外方法 重置
     func reset() {
         second = 0

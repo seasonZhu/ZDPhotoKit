@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 /// 自定义的Asset模型
-public class ZDAssetModel: NSObject {
+public class ZDAssetModel {
     
     /// 图片资源
     public var asset = PHAsset()
@@ -19,7 +19,7 @@ public class ZDAssetModel: NSObject {
     public var type: ZDAssetType = .photo
     
     /// 资源子类
-    var subType: ZDAssetSubType = .normal
+    public var subType: ZDAssetSubType = .normal
     
     /// 图片宽
     public var pixW: Int = 0
@@ -43,7 +43,7 @@ public class ZDAssetModel: NSObject {
     ///   - type: 类型
     ///   - subType: 子类型
     /// - Returns: ZDAssetModel
-    class func creat(asset: PHAsset, type: ZDAssetType, subType: ZDAssetSubType) -> ZDAssetModel {
+    static func creat(asset: PHAsset, type: ZDAssetType, subType: ZDAssetSubType) -> ZDAssetModel {
         let model = ZDAssetModel()
         model.asset = asset
         model.type = type
@@ -51,7 +51,7 @@ public class ZDAssetModel: NSObject {
         model.isSelect = false
         model.pixW = asset.pixelWidth
         model.pixH = asset.pixelHeight
-        model.timeLength = String.init(format: "%.0lf",asset.duration)
+        model.timeLength = String(format: "%.0lf",asset.duration)
         return model
     }
 }

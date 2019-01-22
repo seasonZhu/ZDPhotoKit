@@ -75,9 +75,9 @@ class ZDPhotoCameraCell: UICollectionViewCell {
     //MARK:- 配置相机
     private  func configCamera() {
         device = cameraWithPosition(.back)
-        guard device != nil else {return}
+        guard let device = device else {return}
         do {
-            input = try AVCaptureDeviceInput(device: device!)
+            input = try AVCaptureDeviceInput(device: device)
         }catch {
             return
         }

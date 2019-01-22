@@ -31,10 +31,8 @@
 		0061FBD320C95925001A97FB /* ZDConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0061FBD220C95925001A97FB /* ZDConstant.swift */; };
 		0061FBD520C959D5001A97FB /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0061FBD420C959D5001A97FB /* UIImage+Gif.swift */; };
 		0061FC0B20CB9AAB001A97FB /* ZDPhotoCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0061FC0A20CB9AAB001A97FB /* ZDPhotoCameraController.swift */; };
-		0061FC0D20CBA170001A97FB /* UIImage+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0061FC0C20CBA170001A97FB /* UIImage+Helper.swift */; };
 		0061FC0F20CBC17A001A97FB /* ZDPhotoCropController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0061FC0E20CBC17A001A97FB /* ZDPhotoCropController.swift */; };
 		4580C41C20CE165A0056C98B /* ZDMaskCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4580C41B20CE165A0056C98B /* ZDMaskCornerView.swift */; };
-		45932B1C20CA0ED80019E912 /* SwiftProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45932B1B20CA0ED70019E912 /* SwiftProgressHUD.swift */; };
 		613B179A214640EB0093FE06 /* ZDPhoto.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 613B1799214640EB0093FE06 /* ZDPhoto.bundle */; };
 /* End PBXBuildFile section */
 
@@ -65,10 +63,8 @@
 		0061FBD220C95925001A97FB /* ZDConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDConstant.swift; sourceTree = "<group>"; };
 		0061FBD420C959D5001A97FB /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gif.swift"; sourceTree = "<group>"; };
 		0061FC0A20CB9AAB001A97FB /* ZDPhotoCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDPhotoCameraController.swift; sourceTree = "<group>"; };
-		0061FC0C20CBA170001A97FB /* UIImage+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helper.swift"; sourceTree = "<group>"; };
 		0061FC0E20CBC17A001A97FB /* ZDPhotoCropController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDPhotoCropController.swift; sourceTree = "<group>"; };
 		4580C41B20CE165A0056C98B /* ZDMaskCornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDMaskCornerView.swift; sourceTree = "<group>"; };
-		45932B1B20CA0ED70019E912 /* SwiftProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftProgressHUD.swift; sourceTree = "<group>"; };
 		613B1799214640EB0093FE06 /* ZDPhoto.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZDPhoto.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -136,9 +132,7 @@
 				0061FBBD20C957C8001A97FB /* ZDPhotoBrowserController.swift */,
 				0061FC0A20CB9AAB001A97FB /* ZDPhotoCameraController.swift */,
 				0061FC0E20CBC17A001A97FB /* ZDPhotoCropController.swift */,
-				0061FC0C20CBA170001A97FB /* UIImage+Helper.swift */,
 				0061FBD420C959D5001A97FB /* UIImage+Gif.swift */,
-				45932B1B20CA0ED70019E912 /* SwiftProgressHUD.swift */,
 				613B1799214640EB0093FE06 /* ZDPhoto.bundle */,
 			);
 			path = ZDPhotoKit;
@@ -227,13 +221,11 @@
 				0061FBC820C957C9001A97FB /* ZDPhotoEnum.swift in Sources */,
 				0061FBC920C957C9001A97FB /* ZDPhotoCameraCell.swift in Sources */,
 				0061FB9E20C957BA001A97FB /* ViewController.swift in Sources */,
-				45932B1C20CA0ED80019E912 /* SwiftProgressHUD.swift in Sources */,
 				4580C41C20CE165A0056C98B /* ZDMaskCornerView.swift in Sources */,
 				0061FBC520C957C9001A97FB /* ZDPhotoManager.swift in Sources */,
 				0061FBC320C957C9001A97FB /* ZDPhotoCell.swift in Sources */,
 				0061FBCD20C957C9001A97FB /* ZDPhotoNaviBar.swift in Sources */,
 				0061FBC220C957C9001A97FB /* ZDPhotoPickerController.swift in Sources */,
-				0061FC0D20CBA170001A97FB /* UIImage+Helper.swift in Sources */,
 				0061FBC420C957C9001A97FB /* ZDAlbumModel.swift in Sources */,
 				0061FBD120C957C9001A97FB /* ZDExtension.swift in Sources */,
 				0061FBC620C957C9001A97FB /* ZDRecordButton.swift in Sources */,

@@ -17,10 +17,10 @@ class ZDPhotoCameraController: UIViewController {
     ///  对外的两个回调
     
     ///  照相回调
-    var photoCallback: ((_ image: UIImage) -> ())?
+    var photoCallback: ((_ image: UIImage) -> Void)?
     
     ///  视频路径
-    var videoPathCallback: ((_ path: String) -> ())?
+    var videoPathCallback: ((_ path: String) -> Void)?
     
     ///  pickerVC
     var pickerVC = ZDPhotoPickerController()

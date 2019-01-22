@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 /// 自定义的相册模型
-public  class ZDAlbumModel: NSObject {
+public  class ZDAlbumModel {
     
     /// 相册结果集
     public var result = PHFetchResult<PHAsset>()

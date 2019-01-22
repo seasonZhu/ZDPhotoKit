@@ -10,26 +10,39 @@ import Foundation
 import Photos
 
 /// 多媒体的两大类
+///
+/// - photo: 相片
+/// - video: 相片
 public enum ZDAssetType {
-    case photo, //  相片
-         video  //  视频
+    case photo
+    case video
 }
 
 /// 多媒体的子类
-enum ZDAssetSubType {
-    case normal,  //  普通照片
-         live,  //  实况照片
-         gif,   //  动图
-         HDR,   //
-         panorama,    //  全景
-         screenshot  //  截屏
+///
+/// - normal: 普通照片
+/// - live: 实况照片
+/// - gif: 动图
+/// - HDR: HDR
+/// - panorama: 全景
+/// - screenshot: 截屏
+public enum ZDAssetSubType {
+    case normal
+    case live
+    case gif
+    case HDR
+    case panorama
+    case screenshot
     
     /// 获取子类型
     ///
     /// - Parameter asset: 资源
     /// - Returns: 子类型
-    static func getSubType(asset: PHAsset) -> ZDAssetSubType {
-        let fileName = asset.value(forKey: "filename") as! NSString
+    public static func getSubType(asset: PHAsset) -> ZDAssetSubType {
+        guard let fileName = asset.value(forKey: "filename") as? NSString else {
+            return normal
+        }
+        
         let extStr = fileName.pathExtension as String
         if extStr == "GIF" {
             print("是GIF")

@@ -175,7 +175,7 @@ class ZDPhotoCell: UICollectionViewCell {
     private var gifData: Data?
     
     //  点击选择按钮的回调
-    var selectCallback: ((_ isSelected: Bool) -> ())?
+    var selectCallback: ((_ isSelected: Bool) -> Void)?
     
     //MARK: 初始化
     override init(frame: CGRect) {

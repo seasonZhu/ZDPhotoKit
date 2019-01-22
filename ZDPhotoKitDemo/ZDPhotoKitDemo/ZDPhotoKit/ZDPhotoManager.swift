@@ -55,10 +55,10 @@ public class ZDPhotoManager {
     //MARK:- 配置化闭包
     
     /// 导航栏的主题颜色
-    var mainColorCallback: (() -> (UIColor))?
+    var mainColorCallback: (() -> UIColor)?
     
     /// 其他控件的颜色
-    var widgetColorCallback: (() -> (UIColor))?
+    var widgetColorCallback: (() -> UIColor)?
     
     //MARK:- 单例
     static let `default` = ZDPhotoManager()
@@ -69,7 +69,7 @@ public class ZDPhotoManager {
     /// 是否认证过
     ///
     /// - Parameter callback: 回调
-    func authorizationStatus(callback: @escaping ((Bool) -> ())) {
+    func authorizationStatus(callback: @escaping ((Bool) -> Void)) {
         PHPhotoLibrary.requestAuthorization { (status) in
             callback(status == .authorized)
         }
@@ -83,19 +83,18 @@ public class ZDPhotoManager {
     ///   - callback: 回调
     public func getAllAlbums(allowPickingVideo: Bool,
                       allowPickingImage: Bool,
-                      callback: @escaping (([ZDAlbumModel]) -> ())) {
+                      callback: @escaping (([ZDAlbumModel]) -> Void)) {
         var albums = [ZDAlbumModel]()
         
         //  列出所有系统的智能相册
         let smartOptions = PHFetchOptions()
         
         //  获取智能相册集合
-        let smartAlbums:PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum,
-                                                                                                   subtype: .albumRegular,
-                                                                                                   options:smartOptions)
-        /*smartAlbums不遵守Sequenc协议 所以就for in 循环*/
+        let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options:smartOptions)
+        /*smartAlbums不遵守Sequenc协议 所以就不能for in 循环*/
+        
         //  处理智能相册 后续应该会换遍历方法
-        smartAlbums.enumerateObjects({ (collection, index, nil) in
+        smartAlbums.enumerateObjects { (collection, index, _) in
             // 有可能是PHCollectionList对象，过滤
             if collection.isKind(of: PHCollectionList.classForCoder()) {return}
             // 从集合中获取相册
@@ -104,11 +103,11 @@ public class ZDPhotoManager {
             // 过滤空相册
             if result.count < 1 {return}
             
-            // 过滤删除相册
-            if collection.localizedTitle == "最近删除" || (collection.localizedTitle?.contains("Deleted", compareOption: NSString.CompareOptions.caseInsensitive))! {return }
-            
-            // 过滤长时间曝光相册
-            if (collection.localizedTitle?.contains("Long Exposure", compareOption: NSString.CompareOptions.caseInsensitive))! {return }
+            // 过滤删除相册 长时间曝光相册
+            if let localizedTitle = collection.localizedTitle,
+                localizedTitle == "最近删除"
+                    || localizedTitle.contains("Deleted", compareOption: .caseInsensitive)
+                    || localizedTitle.contains("Long Exposure", compareOption: .caseInsensitive) {return }
             
             // 过滤视频相册
             if !allowPickingVideo && collection.localizedTitle == "Videos" { return }
@@ -121,12 +120,17 @@ public class ZDPhotoManager {
             
             let album = self.getZDAlbumModel(result: result, name: collection.localizedTitle ?? "相片")
             albums.append(album)
-        })
+        }
         
         //  列出所有用户创建的相册
-        let userAlbums:PHFetchResult<PHAssetCollection> = PHCollectionList.fetchTopLevelUserCollections(with: nil) as! PHFetchResult<PHAssetCollection>
+        guard let userAlbums = PHCollectionList.fetchTopLevelUserCollections(with: nil) as? PHFetchResult<PHAssetCollection> else {
+            DispatchQueue.main.async {
+                callback(albums)
+            }
+            return
+        }
         
-        userAlbums.enumerateObjects({ (collection, index, nil) in
+        userAlbums.enumerateObjects { (collection, index, _) in
             // 有可能是PHCollectionList对象，过滤
             if collection.isKind(of: PHCollectionList.classForCoder()) {return}
             // 从集合中获取相册
@@ -136,12 +140,10 @@ public class ZDPhotoManager {
             
             let album = self.getZDAlbumModel(result: result, name: collection.localizedTitle ?? "相片")
             albums.append(album)
-        })
+        }
         
         //  相册按包含的照片数量排序（降序）
-        albums = albums.sorted { (item1, item2) -> Bool in
-            return item1.result.count > item2.result.count
-        }
+        albums = albums.sorted { return $0.result.count > $1.result.count }
         
         DispatchQueue.main.async {
             callback(albums)
@@ -156,9 +158,9 @@ public class ZDPhotoManager {
     ///   - allowPickingImage: 是否筛选图片
     ///   - callback: 回调
     public func getAllAssetOfAlbum(model: ZDAlbumModel,
-                            allowPickingVideo: Bool,
-                            allowPickingImage: Bool,
-                            callback: @escaping (([ZDAssetModel]) -> ())) {
+                                   allowPickingVideo: Bool,
+                                   allowPickingImage: Bool,
+                                   callback: @escaping (([ZDAssetModel]) -> Void)) {
         var assets = [ZDAssetModel]()
         let result = model.result
         
@@ -203,15 +205,15 @@ public class ZDPhotoManager {
     ///   - allowPickingImage: 是否筛选图片
     ///   - callback: 回调
     public func getAllAssetOfAlbum(allowPickingVideo: Bool,
-                            allowPickingImage: Bool,
-                            callback: @escaping (([ZDAssetModel]) -> ())) {
+                                   allowPickingImage: Bool,
+                                   callback: @escaping (([ZDAssetModel]) -> Void)) {
         getAllAlbums(allowPickingVideo: allowPickingVideo, allowPickingImage: allowPickingImage) { (albums) in
             for album in albums {
-                self.getAllAssetOfAlbum(model: album, allowPickingVideo: allowPickingVideo, allowPickingImage: allowPickingImage, callback: { (assets) in
+                self.getAllAssetOfAlbum(model: album, allowPickingVideo: allowPickingVideo, allowPickingImage: allowPickingImage) { (assets) in
                     DispatchQueue.main.async {
                         callback(assets)
                     }
-                })
+                }
             }
         }
     }
@@ -223,8 +225,8 @@ public class ZDPhotoManager {
     ///   - targetSize: 尺寸
     ///   - callback: 回调
     public func getPhoto(asset: PHAsset,
-                  targetSize: CGSize,
-                  callback: @escaping (UIImage?, Dictionary<AnyHashable, Any>?)-> ()) {
+                         targetSize: CGSize,
+                         callback: @escaping (UIImage?, [AnyHashable : Any]?)-> Void) {
         let option = PHImageRequestOptions()
         option.resizeMode = .fast
         
@@ -233,10 +235,11 @@ public class ZDPhotoManager {
             //  如果字典为空 直接返回
             guard let dict = info else {
                 DispatchQueue.main.async {
-                    callback(result, info)
+                    callback(result, nil)
                 }
                 return
             }
+            
             /*
             for (key, value) in dict.enumerated() {
                 print("key: \(key)")
@@ -280,29 +283,23 @@ public class ZDPhotoManager {
     /// - Parameters:
     ///   - asset: 资源
     ///   - callback: 回调
-    public func getGif(asset: PHAsset, callback: @escaping ((Data?, UIImage?) -> ())) {
+    public func getGif(asset: PHAsset, callback: @escaping ((Data?, UIImage?) -> Void)) {
         let option = PHImageRequestOptions()
         option.isNetworkAccessAllowed = true
         option.resizeMode = .fast
         
         PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, dict) in
-            
-            guard let imageData = data else {
+            if let imageData = data {
+                let image = UIImage.gif(data: imageData)
                 DispatchQueue.main.async {
-                    callback(nil, nil)
+                    callback(imageData, image)
                 }
-                return
-            }
-            guard let image = UIImage.gif(data: imageData) else {
+
+            }else {
                 DispatchQueue.main.async {
-                    callback(imageData, nil)
+                    callback(data, nil)
                 }
-                return
             }
-            DispatchQueue.main.async {
-                callback(imageData, image)
-            }
-            
         }
     }
     
@@ -311,7 +308,7 @@ public class ZDPhotoManager {
     /// - Parameters:
     ///   - asset: 资源
     ///   - callback: 回调
-    public func getVideo(asset: PHAsset, callback: @escaping ((URL?, UIImage?) -> ())) {
+    public func getVideo(asset: PHAsset, callback: @escaping ((URL?, UIImage?) -> Void)) {
         let option = PHVideoRequestOptions()
         option.isNetworkAccessAllowed = true
         
@@ -335,7 +332,8 @@ public class ZDPhotoManager {
                         callback(path, image)
                     }
                 })
-            }catch {
+            }catch let error {
+                print(error)
                 DispatchQueue.main.async {
                     callback(nil, nil)
                 }
@@ -351,43 +349,21 @@ public class ZDPhotoManager {
     ///   - targetSize: 尺寸
     ///   - callback: 回调
     public func getLivePhoto(asset: PHAsset,
-                      targetSize: CGSize,
-                      callback: @escaping (PHLivePhoto?, UIImage?, URL?)-> ()) {
+                             targetSize: CGSize,
+                             callback: @escaping (PHLivePhoto?, UIImage?, URL?)-> Void) {
         let option = PHLivePhotoRequestOptions()
         option.isNetworkAccessAllowed = true
+        
         PHImageManager.default().requestLivePhoto(for: asset, targetSize: targetSize, contentMode: .default, options: option) { (livePhoto, dict) in
+
             /*
-            //  尝试打印dic信息
-            guard let dic = dict else { return }
-            for (key, value) in dic.enumerated() {
-                print("key: \(key)")
-                print("value: \(value)")
-            }
+             dict的信息 (key: AnyHashable("PHImageResultIsDegradedKey"), value: 1)
+             */
             
-            //  尝试打印livePhoto的url
-            let videoAsset = livePhoto?.value(forKey: "videoAsset") as? AVURLAsset
-            print("url:\(videoAsset?.url)")
-            */
-            
-            /// 这个回调的url有问题 这个url会回调的为nil
+            /// 这个回调的url有的为空,有的不为空,为空可能是因为livePhoto中并没有视频
             DispatchQueue.main.async {
                 callback(livePhoto, livePhoto?.value(forKey: "image") as? UIImage, (livePhoto?.value(forKey: "videoAsset") as? AVURLAsset)?.url)
             }
-            
-//            if  let live = livePhoto,
-//                let image = live.value(forKey: "image") as? UIImage,
-//                let videoAsset = live.value(forKey: "videoAsset") as? AVURLAsset {
-//
-//                DispatchQueue.main.async {
-//                    callback(live, image, videoAsset.url)
-//                }
-//            } else {
-//
-//                //  如果数据为空 那么就使用原生数据进行转换
-//                DispatchQueue.main.async {
-//                    callback(livePhoto, livePhoto?.value(forKey: "image") as? UIImage, (livePhoto?.value(forKey: "videoAsset") as? AVURLAsset)?.url)
-//                }
-//            }
         }
     }
     
@@ -398,8 +374,8 @@ public class ZDPhotoManager {
     ///   - isVideo: 是否是视频 默认是视频
     ///   - callback: 回调
     public func compressVideoOrLivePhoto(asset: AVAsset,
-                                  isVideo: Bool = true,
-                                  callback: @escaping ((URL?) -> ())) {
+                                         isVideo: Bool = true,
+                                         callback: @escaping ((URL?) -> Void)) {
         let lastPath = isVideo ? "/outAssetVideo.mp4" : "/outAssetLivePhoto.mp4"
         
         let outPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + lastPath
@@ -425,9 +401,7 @@ public class ZDPhotoManager {
         
         exportSession.exportAsynchronously {
             switch exportSession.status {
-            case .failed:
-                callback(nil)
-            case .cancelled:
+            case .failed, .cancelled:
                 callback(nil)
             case .completed:
                 callback(outVideoUrl)
@@ -442,7 +416,7 @@ public class ZDPhotoManager {
     /// - Parameters:
     ///   - models: 照片模型
     ///   - callback: 回调
-    public func getPhotosSize(models: [ZDAssetModel], callback: @escaping (String, Int) -> ()) {
+    public func getPhotosSize(models: [ZDAssetModel], callback: @escaping (String, Int) -> Void) {
         
         let imageOption = PHImageRequestOptions()
         imageOption.resizeMode = .fast
@@ -493,7 +467,7 @@ public class ZDPhotoManager {
     func showAlert(controller: UIViewController, message: String? = nil) {
         //弹出提示
         let title = message ?? "你最多只能选择\(maxSelected)张照片"
-        /* 原生UIAlertController
+        // 原生UIAlertController
         let alertController = UIAlertController(title: title, message: nil,
                                                 preferredStyle: .alert)
         
@@ -501,8 +475,6 @@ public class ZDPhotoManager {
                                          handler:nil)
         alertController.addAction(cancelAction)
         controller.present(alertController, animated: true, completion: nil)
-        */
-        SwiftProgressHUD.show(title, type: .info, autoClear: true, autoClearTime: 1.5)
     }
 }
 

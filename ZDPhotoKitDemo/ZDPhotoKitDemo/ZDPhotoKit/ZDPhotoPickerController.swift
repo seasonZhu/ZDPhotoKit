@@ -61,39 +61,39 @@ public class ZDPhotoPickerController: UIViewController {
     //MARK:- 闭包回调
     
     /// 选择照片的闭包
-    public var selectPhotoCallback: ((UIImage) -> ())?
+    public var selectPhotoCallback: ((UIImage) -> Void)?
     
     /// 选择需要剪裁的闭包
-    public var selectCropImageCallback: ((UIImage?) -> ())?
+    public var selectCropImageCallback: ((UIImage?) -> Void)?
     
     /// 拍照的闭包
-    public var takePhotoCallback: ((UIImage) -> ())?
+    public var takePhotoCallback: ((UIImage) -> Void)?
     
     /// 选择的视频
-    public var takeVideoCallback: ((UIImage?, String) -> ())?
+    public var takeVideoCallback: ((UIImage?, String) -> Void)?
     
     /// livePhoto
-    public var selectLivePhotoCallback: ((UIImage, PHLivePhoto, String) -> ())?
+    public var selectLivePhotoCallback: ((UIImage, PHLivePhoto, String) -> Void)?
     
     /// 静态的livePhoto
-    public var selectStaticLivePhotoCallback: ((UIImage) -> ())?
+    public var selectStaticLivePhotoCallback: ((UIImage) -> Void)?
     
     /// 选择的Gif
-    public var selectGifCallback: ((Data, CGSize) -> ())?
+    public var selectGifCallback: ((Data, CGSize) -> Void)?
     
     /// 选择的视频
-    public var selectVideoCallback: ((UIImage?, String) -> ())?
+    public var selectVideoCallback: ((UIImage?, String) -> Void)?
     
     /// 选择的模型闭包
-    public var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> ())?
+    public var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> Void)?
     
     //MARK:- 配置化闭包
     
     /// 导航栏的主题颜色
-    public var mainColorCallback: (() -> (UIColor))?
+    public var mainColorCallback: (() -> UIColor)?
     
     /// 其他控件的颜色
-    public var widgetColorCallback: (() -> (UIColor))?
+    public var widgetColorCallback: (() -> UIColor)?
     
     //MARK:- 私有属性
     

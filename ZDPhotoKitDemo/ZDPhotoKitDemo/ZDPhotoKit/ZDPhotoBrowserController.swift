@@ -316,7 +316,7 @@ class ZDPhotoBrowserController: UIViewController {
             
             //  守护图片有值
             guard let saveImage = image else {
-                SwiftProgressHUD.showOnlyText("获取图片失败!")
+                //弹窗("获取图片失败!")
                 return
             }
             
@@ -326,7 +326,7 @@ class ZDPhotoBrowserController: UIViewController {
             }) { (isSuccess, error) in
                 let message = isSuccess ? "图片保存成功！" : "图片保存失败！"
                 DispatchQueue.main.async {
-                    SwiftProgressHUD.showOnlyText(message)
+                    //弹窗(message)
                 }
             }
         }
