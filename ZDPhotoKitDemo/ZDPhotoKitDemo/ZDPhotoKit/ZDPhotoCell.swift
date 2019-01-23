@@ -128,7 +128,7 @@ class ZDPhotoCell: UICollectionViewCell {
                     imageView.addGestureRecognizer(longTap)
                 }
                 
-                ZDPhotoManager.default.getGif(asset: asset) { (data, image) in
+                ZDPhotoManager.default.getGif(asset: asset) { (data, image, url) in
                     self.imageView.image = image?.images?.first //最好不要直接赋值回调中的image 这个是gif 同时加载很多内存吃不消
                 }
             }else if newValue.subType == .live {
@@ -152,7 +152,7 @@ class ZDPhotoCell: UICollectionViewCell {
 
                 }
             }else {
-                ZDPhotoManager.default.getPhoto(asset: asset, targetSize: CGSize(width: 150, height: 150)) { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: asset, targetSize: CGSize(width: 150, height: 150)) { (image, dict, url) in
                     self.imageView.image = image
                 }
             }
@@ -386,11 +386,11 @@ class ZDPhotoCell: UICollectionViewCell {
         //  不使用全局的变量 这样用完了就销毁 内存消耗更少
         
         if longPress.state == .began {
-            ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image) in
+            ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image, url) in
                 self.imageView.image = image
             }
         }else if longPress.state == .ended {
-            ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image) in
+            ZDPhotoManager.default.getGif(asset: asset.asset) { (data, image, url) in
                 self.imageView.image = image?.images?.first
             }
         }

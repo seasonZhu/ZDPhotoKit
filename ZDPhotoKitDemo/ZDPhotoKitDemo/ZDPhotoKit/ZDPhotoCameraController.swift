@@ -51,7 +51,7 @@ class ZDPhotoCameraController: UIViewController {
     ///  拍照层
     private lazy var maskView: UIImageView = {
         let imageView = UIImageView(frame: layerView.frame)
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(maskViewAction(_ :))))
         return imageView
@@ -241,7 +241,7 @@ class ZDPhotoCameraController: UIViewController {
     
     //MARK:- 搭建界面
     private func setUpUI() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         navigationController?.navigationBar.isHidden = true
         
         view.addSubview(layerView)
@@ -387,6 +387,7 @@ class ZDPhotoCameraController: UIViewController {
         squareButton.isHidden = false
         rectangleButton.isHidden = false
         timeLabel.isHidden = true
+        layerView.isHidden = false
         timeLabel.text = ""
         maskView.image = nil
         videoLenght = 0.0
@@ -514,15 +515,15 @@ class ZDPhotoCameraController: UIViewController {
             imageContect.videoOrientation = currentVideoOrientation()
         }
         imageOutput.captureStillImageAsynchronously(from: imageContect) { (imageDataSampleBuffer, error) in
-            guard imageDataSampleBuffer != nil, error == nil else { return }
-            guard let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer!) else { return }
-            guard let image = UIImage(data: data) else { return }
-            let fixImage = image.fixOrientation
+            guard let buffer = imageDataSampleBuffer, error == nil else { return }
+            guard let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(buffer) else { return }
+            guard let image = UIImage(data: data)?.fixOrientation else { return }
             DispatchQueue.main.async {
                 self.buttonAnimationOpen()
                 //self.finalPhoto = self.squareButton.isSelected ? fixImage.clipSquareImage(scale: 1.0) : fixImage
-                self.finalPhoto = fixImage
-                self.maskView.image = fixImage
+                self.finalPhoto = image
+                self.maskView.image = image
+                self.layerView.isHidden = true
             }
         }
     }

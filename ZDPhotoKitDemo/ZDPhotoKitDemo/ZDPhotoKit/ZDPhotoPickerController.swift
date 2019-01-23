@@ -55,13 +55,7 @@ public class ZDPhotoPickerController: UIViewController {
     /// 剪裁的大小
     public var cropFrame = CGRect(x: 0, y: ZDConstant.kScreenHeight / 2.0 - ZDConstant.kScreenWidth / 2.0, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenWidth)
     
-    /// 控制器
-    var cropPopToVC: UIViewController?
-    
     //MARK:- 闭包回调
-    
-    /// 选择照片的闭包
-    public var selectPhotoCallback: ((UIImage) -> Void)?
     
     /// 选择需要剪裁的闭包
     public var selectCropImageCallback: ((UIImage?) -> Void)?
@@ -71,18 +65,6 @@ public class ZDPhotoPickerController: UIViewController {
     
     /// 选择的视频
     public var takeVideoCallback: ((UIImage?, String) -> Void)?
-    
-    /// livePhoto
-    public var selectLivePhotoCallback: ((UIImage, PHLivePhoto, String) -> Void)?
-    
-    /// 静态的livePhoto
-    public var selectStaticLivePhotoCallback: ((UIImage) -> Void)?
-    
-    /// 选择的Gif
-    public var selectGifCallback: ((Data, CGSize) -> Void)?
-    
-    /// 选择的视频
-    public var selectVideoCallback: ((UIImage?, String) -> Void)?
     
     /// 选择的模型闭包
     public var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> Void)?

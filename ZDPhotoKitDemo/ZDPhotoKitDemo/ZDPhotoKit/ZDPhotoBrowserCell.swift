@@ -230,7 +230,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
             
             if model.subType == .gif {
                 
-                ZDPhotoManager.default.getGif(asset: model.asset) { (data, image) in
+                ZDPhotoManager.default.getGif(asset: model.asset) { (data, image, url) in
                     self.imageView.image = image
                 }
             }else if model.subType == .live {
@@ -248,7 +248,7 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
                     self.livePhoteView.startPlayback(with: .full)
                 }
             }else {
-                ZDPhotoManager.default.getPhoto(asset: model.asset, targetSize: CGSize(width: model.pixW, height: model.pixH)) { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: model.asset, targetSize: CGSize(width: model.pixW, height: model.pixH)) { (image, dict, url) in
                     self.imageView.image = image
                 }
             }

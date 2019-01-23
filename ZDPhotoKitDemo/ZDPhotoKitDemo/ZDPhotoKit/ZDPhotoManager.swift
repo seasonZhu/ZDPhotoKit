@@ -227,7 +227,7 @@ public class ZDPhotoManager {
     ///   - callback: 回调
     public func getPhoto(asset: PHAsset,
                          targetSize: CGSize,
-                         callback: @escaping (UIImage?, [AnyHashable : Any]?)-> Void) {
+                         callback: @escaping (UIImage?, [AnyHashable : Any]?, URL?)-> Void) {
         let option = PHImageRequestOptions()
         option.resizeMode = .fast
         
@@ -236,7 +236,7 @@ public class ZDPhotoManager {
             //  如果字典为空 直接返回
             guard let dict = info else {
                 DispatchQueue.main.async {
-                    callback(result, nil)
+                    callback(result, nil, nil)
                 }
                 return
             }
@@ -247,13 +247,14 @@ public class ZDPhotoManager {
                 print("value: \(value)")
             }
             */
+            let url = dict["PHImageFileURLKey"] as? URL
             
             let downloadFinined = (dict[PHImageCancelledKey] != nil) && ((dict[PHImageCancelledKey] as! NSNumber) != 1) && (dict[PHImageErrorKey] != nil) && (dict[PHImageResultIsDegradedKey] as! NSNumber != 1)
             
             //  如果CancelKey存在且为false 并且error不为空 返回闭包
             if downloadFinined {
                 DispatchQueue.main.async {
-                    callback(result, dict)
+                    callback(result, dict, url)
                 }
             //  如果iCloud有值,同时result为空 那么需要从iCloud进行下载
             }else if let _ = dict[PHImageResultIsInCloudKey], result == nil {
@@ -261,19 +262,19 @@ public class ZDPhotoManager {
                 PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, infomation) in
                     guard let imageData = data, let iCouldImage = UIImage(data: imageData, scale: 0.05)  else {
                         DispatchQueue.main.async {
-                            callback(nil, infomation)
+                            callback(nil, infomation, url)
                         }
                         return
                     }
 
                     DispatchQueue.main.async {
-                        callback(iCouldImage, infomation)
+                        callback(iCouldImage, infomation, url)
                     }
 
                 }
             }else {
                 DispatchQueue.main.async {
-                    callback(result, info)
+                    callback(result, info, url)
                 }
             }
         }
@@ -284,21 +285,22 @@ public class ZDPhotoManager {
     /// - Parameters:
     ///   - asset: 资源
     ///   - callback: 回调
-    public func getGif(asset: PHAsset, callback: @escaping ((Data?, UIImage?) -> Void)) {
+    public func getGif(asset: PHAsset, callback: @escaping ((Data?, UIImage?, URL?) -> Void)) {
         let option = PHImageRequestOptions()
         option.isNetworkAccessAllowed = true
         option.resizeMode = .fast
         
         PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, dict) in
             if let imageData = data {
+                let url = dict?["PHImageFileURLKey"] as? URL
                 let image = UIImage.gif(data: imageData)
                 DispatchQueue.main.async {
-                    callback(imageData, image)
+                    callback(imageData, image, url)
                 }
 
             }else {
                 DispatchQueue.main.async {
-                    callback(data, nil)
+                    callback(data, nil, nil)
                 }
             }
         }
@@ -343,7 +345,7 @@ public class ZDPhotoManager {
         }
     }
     
-    /// 获取livePhoto, 回调的url有问题 为空
+    /// 获取livePhoto, 回调的url可能为空
     ///
     /// - Parameters:
     ///   - asset: 资源

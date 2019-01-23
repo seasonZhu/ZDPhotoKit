@@ -95,66 +95,62 @@ extension UIImage {
         return thumb
     }
     
-    /// 修正图片
-    var fixOrientation: UIImage? {
+    /// 修正图片 (这个方法暂时还是有问题的)
+    var fixOrientation: UIImage {
         
         if imageOrientation == .up {
             return self
         }
         
-        // We need to calculate the proper transformation to make the image upright.
-        // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
-        var transform: CGAffineTransform = .identity
+        var transform = CGAffineTransform.identity
         switch imageOrientation {
         case .down, .downMirrored:
-            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
-            transform = transform.rotated(by: CGFloat(Double.pi))
+            transform = transform.translatedBy(x: size.width, y: size.height)
+            transform = transform.rotated(by: CGFloat.pi)
         case .left, .leftMirrored:
-            transform = transform.translatedBy(x: self.size.width, y: 0)
-            transform = transform.rotated(by: CGFloat(Double.pi / 2))
+            transform = transform.translatedBy(x: size.width, y: 0)
+            transform = transform.rotated(by: CGFloat.pi/2)
         case .right, .rightMirrored:
-            transform = transform.translatedBy(x: 0, y: self.size.height)
-            transform = transform.rotated(by: CGFloat(Double.pi / 2))
+            transform = transform.translatedBy(x: 0, y: size.height)
+            transform = transform.rotated(by: -CGFloat.pi/2)
         default:
             break
         }
         
-        switch self.imageOrientation {
+        switch imageOrientation {
         case .upMirrored, .downMirrored:
-            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.translatedBy(x: size.width, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
         case .leftMirrored, .rightMirrored:
-            transform = transform.translatedBy(x: self.size.height, y: 0)
+            transform = transform.translatedBy(x: size.height, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
         default:
             break
         }
         
-        // Now we draw the underlying CGImage into a new context, applying the transform
-        // calculated above.
-        guard let cgImage = self.cgImage, let colorSpace = cgImage.colorSpace else { return nil }
-        
-        //这里需要注意下CGImageGetBitmapInfo，它的类型是Int32的，CGImageGetBitmapInfo(aImage.CGImage).rawValue，这样写才不会报错
-        guard let ctx = CGContext(data: nil,
-                                  width: Int(size.width),
-                                  height: Int(size.height),
-                                  bitsPerComponent: cgImage.bitsPerComponent,
-                                  bytesPerRow: 0,
-                                  space: colorSpace,
-                                  bitmapInfo: cgImage.bitmapInfo.rawValue) else {
-                                    return nil
+        guard let cgImage = cgImage else {
+            return self
         }
-        ctx.concatenate(transform)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        guard let context = CGContext(data: nil, width: Int(size.width), height: Int(size.height), bitsPerComponent: Int(cgImage.bitsPerComponent), bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue) else {
+            return self
+        }
+        
+        context.concatenate(transform)
+        
         switch imageOrientation {
         case .left, .leftMirrored, .right, .rightMirrored:
-            draw(in: CGRect(x: 0, y: 0,  width: self.size.height, height: self.size.width))
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: size.height, height: size.width))
         default:
-            draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         }
         
-        // And now we just create a new UIImage from the drawing context
-        guard let cgimg = ctx.makeImage() else { return nil }
-        let img = UIImage(cgImage: cgimg)
-        return img
+        if let cgImg = context.makeImage() {
+            return UIImage(cgImage: cgImg)
+        }
+        
+        return self
     }
 }

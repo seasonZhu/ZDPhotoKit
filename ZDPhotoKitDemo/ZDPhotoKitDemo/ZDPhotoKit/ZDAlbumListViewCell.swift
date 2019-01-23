@@ -71,7 +71,7 @@ class ZDAlbumListViewCell: UITableViewCell {
             if let albumImage = newValue.albumImage {
                 photoView.image = albumImage
             }else {
-                ZDPhotoManager.default.getPhoto(asset: newValue.asset ?? PHAsset(), targetSize: CGSize(width: 60, height: 60)) { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: newValue.asset ?? PHAsset(), targetSize: CGSize(width: 60, height: 60)) { (image, dict, url) in
                     self.photoView.image = image
                     newValue.albumImage = image
                 }

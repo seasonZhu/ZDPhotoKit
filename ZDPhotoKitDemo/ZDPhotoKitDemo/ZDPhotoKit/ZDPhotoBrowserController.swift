@@ -14,7 +14,7 @@ class ZDPhotoBrowserController: UIViewController {
     //MARK:- 属性设置
     
     ///  返回闭包
-    var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> ())?
+    var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> Void)?
     
     ///  pickerVC,一定要对其进行赋值
     var pickerVC: ZDPhotoPickerController!
@@ -310,7 +310,7 @@ class ZDPhotoBrowserController: UIViewController {
     @objc
     private func downloadAction(_ button: UIButton) {
         
-        ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, info) in
+        ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, info, url) in
             
             //  守护图片有值
             guard let saveImage = image else {
