@@ -558,7 +558,7 @@ public class ZDPhotoPickerController: UIViewController {
             return
         }
         
-        ZDPhotoManager.default.getPhotosSize(models: selectAssets) { (sizeString, size) in
+        ZDPhotoManager.default.getPhotosDataSize(models: selectAssets) { (sizeString, size) in
             self.imagesSizeLabel.text = sizeString
         }
     }

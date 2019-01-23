@@ -417,7 +417,7 @@ public class ZDPhotoManager {
     /// - Parameters:
     ///   - models: 照片模型
     ///   - callback: 回调
-    public func getPhotosSize(models: [ZDAssetModel], callback: @escaping (String, Int) -> Void) {
+    public func getPhotosDataSize(models: [ZDAssetModel], callback: @escaping (String, Int) -> Void) {
         
         let imageOption = PHImageRequestOptions()
         imageOption.resizeMode = .fast

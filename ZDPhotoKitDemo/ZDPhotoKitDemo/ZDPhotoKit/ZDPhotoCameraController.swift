@@ -412,12 +412,12 @@ class ZDPhotoCameraController: UIViewController {
     @objc
     private func nextButtonAction(_ button: UIButton) {
         if isTakePhoto {
-            pickerVC.takePhotoCallback?(finalPhoto)
+            pickerVC?.takePhotoCallback?(finalPhoto)
         }else {
             clipVideo(success: {
                 //  获取视频封面图
                 let image = UIImage.getFirstPicture(frome: self.videoUrl.absoluteString)
-                self.pickerVC.takeVideoCallback?(image, self.videoUrl.absoluteString)
+                self.pickerVC?.takeVideoCallback?(image, self.videoUrl.absoluteString)
             }, fail: {
                 print("压缩视频失败")
             })

@@ -242,13 +242,13 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
                 let longTap = UILongPressGestureRecognizer(target: self, action: #selector(livePhotoStart(_ :)))
                 livePhoteView.addGestureRecognizer(longTap)
                 
-                ZDPhotoManager.default.getLivePhoto(asset: model.asset, targetSize: bounds.size) { (livePhoto, image, url) in
+                ZDPhotoManager.default.getLivePhoto(asset: model.asset, targetSize: CGSize(width: model.pixW, height: model.pixH)) { (livePhoto, image, url) in
                     self.livePhoteView.livePhoto = livePhoto
                     self.livePhoteView.isMuted = true
                     self.livePhoteView.startPlayback(with: .full)
                 }
             }else {
-                ZDPhotoManager.default.getPhoto(asset: model.asset, targetSize: bounds.size) { (image, dict) in
+                ZDPhotoManager.default.getPhoto(asset: model.asset, targetSize: CGSize(width: model.pixW, height: model.pixH)) { (image, dict) in
                     self.imageView.image = image
                 }
             }

@@ -51,7 +51,7 @@ class ZDPhotoCropController: UIViewController {
     private lazy var originalImage = UIImage()
     
     /// 剪裁的Frame
-    private var cropFrame: CGRect
+    private let cropFrame: CGRect
     
     /// 资源模型
     private var asset: ZDAssetModel
@@ -136,7 +136,7 @@ class ZDPhotoCropController: UIViewController {
         
         naviBar.rightButtonCallback = { [weak self] rightbutton in
             self?.dismiss(animated: true)
-            self?.pickerVC.selectCropImageCallback?(self?.getCropImage())
+            self?.pickerVC?.selectCropImageCallback?(self?.getCropImage())
         }
     }
     
@@ -158,8 +158,14 @@ class ZDPhotoCropController: UIViewController {
     //MARK:- 原始图片的设置
     private func originalImageSetting() {
         
+        /*
+         我打印了下面回调的dict
+         回调的两次 第一次是缩略图, 第二次是原图 主要的是字典信息不同
+         dict["PHImageFileSandboxExtensionTokenKey"] 第二次回调有一个这样的值,里面有丰富的数据信息
+         */
+        
         //  这个回调会调用两次 第一次拿的模糊的图 第二次拿的是高清图 其实我们要拿第二次的
-        ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, _) in
+        ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, dict) in
             guard let originalImage = image, originalImage.size.width > 0 && originalImage.size.height > 0 else {
                 return
             }

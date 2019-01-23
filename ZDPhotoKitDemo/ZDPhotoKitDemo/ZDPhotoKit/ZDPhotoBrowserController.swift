@@ -419,7 +419,7 @@ extension ZDPhotoBrowserController: UICollectionViewDelegate, UICollectionViewDa
             naviBar.rightButton.tag = indexPath.item
             
             //  获取当前图片的大小
-            ZDPhotoManager.default.getPhotosSize(models: [cell.asset]) { (sizeString, size) in
+            ZDPhotoManager.default.getPhotosDataSize(models: [cell.asset]) { (sizeString, size) in
                 self.imagesSizeLabel.text = sizeString
             }
         }
