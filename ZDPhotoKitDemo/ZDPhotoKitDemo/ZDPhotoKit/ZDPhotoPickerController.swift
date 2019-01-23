@@ -289,6 +289,7 @@ public class ZDPhotoPickerController: UIViewController {
         manager.maxVideoTime = maxVideoTime
         manager.mainColorCallback = mainColorCallback
         manager.widgetColorCallback = widgetColorCallback
+        manager.pickerVC = self
         maxSelected = isAllowCropper ? 1 : maxSelected
         
         //  判断是否授权
@@ -560,7 +561,6 @@ public class ZDPhotoPickerController: UIViewController {
                                                          selectAssets: selectAssets,
                                                          assetTypeSet: assetTypeSet,
                                                          isSelected: originalImageButton.isSelected)
-        browserController.pickerVC = self
         navigationController?.pushViewController(browserController, animated: true)
         
         browserController.selectAssetsCallback = { selectAssets, assetTypeSet, isSelected in
@@ -606,7 +606,6 @@ public class ZDPhotoPickerController: UIViewController {
         
         //  前面保证了selectAssets.count > 0 的判断才显示剪裁按钮 所以这里可以first!
         let photoCropController = ZDPhotoCropController(asset: selectAssets.first!, cropFrame: cropFrame)
-        photoCropController.pickerVC = self
         navigationController?.pushViewController(photoCropController, animated: true)
     }
     
@@ -689,7 +688,6 @@ extension ZDPhotoPickerController: UICollectionViewDelegate {
             }
             
             let cameraController = ZDPhotoCameraController()
-            cameraController.pickerVC = self
             navigationController?.pushViewController(cameraController, animated: true)
         }else {
             

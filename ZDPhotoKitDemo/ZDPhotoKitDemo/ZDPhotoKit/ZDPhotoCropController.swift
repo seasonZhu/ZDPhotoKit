@@ -13,9 +13,6 @@ class ZDPhotoCropController: UIViewController {
     
     //MARK:- 属性设置
     
-    /// pickerVC, 一定要对其进行赋值
-    var pickerVC: ZDPhotoPickerController!
-    
     /// 自定义导航栏
     private lazy var naviBar: ZDPhotoNaviBar = {
         let naviBar = ZDPhotoNaviBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: ZDConstant.kNavigationBarHeight))
@@ -136,7 +133,7 @@ class ZDPhotoCropController: UIViewController {
         
         naviBar.rightButtonCallback = { [weak self] rightbutton in
             self?.dismiss(animated: true)
-            self?.pickerVC?.selectCropImageCallback?(self?.getCropImage())
+            ZDPhotoManager.default.pickerVC?.selectCropImageCallback?(self?.getCropImage())
         }
     }
     

@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         picker.isAllowGif = true
         picker.isAllowLive = true
         picker.isAllowVideo = true
-        picker.isAllowCropper = false
+        picker.isAllowCropper = true
         picker.isAllowCaputreVideo = true
         picker.isAllowTakePhoto = true
         picker.isAllowShowLive = false 

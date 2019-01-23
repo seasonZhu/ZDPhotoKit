@@ -16,9 +16,6 @@ class ZDPhotoBrowserController: UIViewController {
     ///  返回闭包
     var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> Void)?
     
-    ///  pickerVC,一定要对其进行赋值
-    var pickerVC: ZDPhotoPickerController!
-    
     ///  是否是原图
     private var isSelected: Bool
     
@@ -57,8 +54,6 @@ class ZDPhotoBrowserController: UIViewController {
             naviBar.rightButton.setImage(UIImage(namedInBundle: "image_not_selected"), for: .normal)
             naviBar.rightButton.setImage(UIImage(namedInBundle: "image_selected"), for: .selected)
         }
-        
-        
         
         return naviBar
     }()
@@ -99,16 +94,6 @@ class ZDPhotoBrowserController: UIViewController {
         pageControl.currentPage = indexPath.item
         pageControl.isHidden = assets.count > 9 || assets.count < 2 ? true : false
         return pageControl
-    }()
-    
-    ///  下载按钮,目前不添加上
-    private lazy var downloanButton: UIButton = {
-        let button = UIButton()
-        button.frame = CGRect(x: ZDConstant.kScreenWidth - 20 - 44, y: ZDConstant.kScreenHeight - 20 - 44, width: 44, height: 44)
-        button.setImage(UIImage(namedInBundle: "image_download"), for: .normal)
-        button.addTarget(self, action: #selector(downloadAction(_ :)), for: .touchUpInside)
-        button.isHidden = true
-        return button
     }()
     
     ///  toolbar 别使用UIToolBar这个控件,坑爹
@@ -216,10 +201,6 @@ class ZDPhotoBrowserController: UIViewController {
         //  pageControl
         view.addSubview(pageControl)
         
-        //  下载按钮
-        view.addSubview(downloanButton)
-        view.bringSubviewToFront(downloanButton)
-        
         //  事件
         onInitEvent()
         
@@ -306,36 +287,12 @@ class ZDPhotoBrowserController: UIViewController {
         selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
     }
     
-    //  下载按钮的点击事件
-    @objc
-    private func downloadAction(_ button: UIButton) {
-        
-        ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, info, url) in
-            
-            //  守护图片有值
-            guard let saveImage = image else {
-                //弹窗("获取图片失败!")
-                return
-            }
-            
-            //  保存图片
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAsset(from: saveImage)
-            }) { (isSuccess, error) in
-                let message = isSuccess ? "图片保存成功！" : "图片保存失败！"
-                DispatchQueue.main.async {
-                    //弹窗(message)
-                }
-            }
-        }
-    }
-    
     //  点击了完成按钮
     @objc
     private func selectImageComplete() {
         print("从完成按钮这里进行点击事件")
         dismiss(animated: true)
-        pickerVC?.selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
+        ZDPhotoManager.default.pickerVC?.selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
     }
     
     //MARK:- 原图按钮的点击事件

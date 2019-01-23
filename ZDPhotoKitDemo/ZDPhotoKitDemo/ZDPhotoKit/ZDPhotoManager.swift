@@ -60,6 +60,9 @@ public class ZDPhotoManager {
     /// 其他控件的颜色
     var widgetColorCallback: (() -> UIColor)?
     
+    /// 弱持有pickerVC,方便进行闭包的回调
+    weak var pickerVC: ZDPhotoPickerController?
+    
     //MARK:- 单例
     static let `default` = ZDPhotoManager()
     private init() {}

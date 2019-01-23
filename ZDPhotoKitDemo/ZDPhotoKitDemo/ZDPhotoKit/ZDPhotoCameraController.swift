@@ -22,9 +22,6 @@ class ZDPhotoCameraController: UIViewController {
     ///  视频路径
     var videoPathCallback: ((_ path: String) -> Void)?
     
-    ///  pickerVC,一定要对其进行赋值
-    var pickerVC: ZDPhotoPickerController!
-    
     ///  对内的私有方法
     
     /// 自定义导航栏
@@ -413,12 +410,12 @@ class ZDPhotoCameraController: UIViewController {
     @objc
     private func nextButtonAction(_ button: UIButton) {
         if isTakePhoto {
-            pickerVC?.takePhotoCallback?(finalPhoto)
+            ZDPhotoManager.default.pickerVC?.takePhotoCallback?(finalPhoto)
         }else {
             clipVideo(success: {
                 //  获取视频封面图
                 let image = UIImage.getFirstPicture(frome: self.videoUrl.absoluteString)
-                self.pickerVC?.takeVideoCallback?(image, self.videoUrl.absoluteString)
+                ZDPhotoManager.default.pickerVC?.takeVideoCallback?(image, self.videoUrl.absoluteString)
             }, fail: {
                 print("压缩视频失败")
             })
