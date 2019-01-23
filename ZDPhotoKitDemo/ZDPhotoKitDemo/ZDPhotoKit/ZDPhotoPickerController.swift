@@ -87,7 +87,7 @@ public class ZDPhotoPickerController: UIViewController {
     /// 选择的模型闭包
     public var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> Void)?
     
-    //MARK:- 配置化闭包
+    //MARK:- 配置化闭包,其实这个用闭包还是用属性都我现在感觉都是一样的 当时可能对有返回值的闭包理解不深刻,所以在这么用吧
     
     /// 导航栏的主题颜色
     public var mainColorCallback: (() -> UIColor)?
@@ -208,13 +208,6 @@ public class ZDPhotoPickerController: UIViewController {
         return imageCompleteButton
     }()
     
-    ///  缩略图大小
-    private var assetGridThumbnailSize: CGSize = {
-        let scale = UIScreen.main.scale
-        let width =  (UIScreen.main.bounds.size.width / 3 - UIScreen.main.scale) * scale
-        return CGSize(width: width, height: width)
-    }()
-    
     ///  相薄view的背景
     private lazy var albumBackgroundView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: naviBar.frame.height, width: ZDConstant.kScreenWidth, height: ZDConstant.kScreenHeight - naviBar.frame.height))
@@ -246,10 +239,7 @@ public class ZDPhotoPickerController: UIViewController {
     private lazy var selectAssets = [ZDAssetModel]()
     
     /// 选择类型
-    private var assetTypeSet: Set<ZDAssetType> = Set()
-    
-    /// 是否仅仅刷新cell上的num
-    private var onlyRefreshSelectNum = false
+    private var assetTypeSet = Set<ZDAssetType>()
 
     //MARK:- viewDidLoad
     override public func viewDidLoad() {
@@ -370,7 +360,9 @@ public class ZDPhotoPickerController: UIViewController {
         //  不知道为啥 这个相册在dissmiss的时候回在最顶层 然后再消失 这里先隐藏处理
         albumView.isHidden = true
         
-        if let viewControllers = navigationController?.viewControllers, let count = navigationController?.viewControllers.count, count > 1, viewControllers[count - 1] == self {
+        if let viewControllers = navigationController?.viewControllers,
+            let count = navigationController?.viewControllers.count, count > 1,
+            viewControllers[count - 1] == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)
@@ -386,12 +378,14 @@ public class ZDPhotoPickerController: UIViewController {
     }
     
     //  相薄的背景点击事件
-    @objc private func albumBackgroundViewAction() {
+    @objc
+    private func albumBackgroundViewAction() {
         titleButtonAction(naviBar.titleButton)
     }
     
     //  中间按钮的点击事件
-    @objc private func titleButtonAction(_ button: ZDPhotoTitleButton) {
+    @objc
+    private func titleButtonAction(_ button: ZDPhotoTitleButton) {
         button.isSelected = !button.isSelected
         button.isUserInteractionEnabled = false
         
@@ -437,23 +431,27 @@ public class ZDPhotoPickerController: UIViewController {
     }
     
     //MARK:- 预览按钮的点击事件
-    @objc private func previewButtonAction() {
+    @objc
+    private func previewButtonAction() {
         let indexPath = IndexPath(item: 0, section: 0)
         pushToPhotoBrowserController(assets: selectAssets, indexPath: indexPath, selectAssets: selectAssets)
     }
     
     //MARK:- 原图按钮的点击事件
-    @objc private func originalImageButtonAction(_ button: UIButton) {
+    @objc
+    private func originalImageButtonAction(_ button: UIButton) {
         button.isSelected = !button.isSelected
     }
     
     //MARK:- 滑动到最底部
     private func scrollToCollectionViewBottom() {
-        let indexPath = IndexPath(item: collectionView.numberOfItems(inSection: 0) - 1, section: 0)
+        let itemCount = collectionView.numberOfItems(inSection: 0)
+        let indexPath = IndexPath(item: itemCount > 0 ? itemCount - 1 : 0, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .bottom, animated: false)
     }
     
     //MARK:- 点击cell的选择按钮来改变cell与底部栏的状态
+    
     /// 点击cell的选择按钮来改变cell与底部栏的状态
     ///
     /// - Parameters:
@@ -542,7 +540,7 @@ public class ZDPhotoPickerController: UIViewController {
             let photoCells = cells.filter { return $0 is ZDPhotoCell } as! [ZDPhotoCell]
             var refreshIndexPaths = [IndexPath]()
             for photoCell in photoCells where selectAssets.contains(where: { $0.asset == photoCell.asset.asset }) {
-                refreshIndexPaths.append(photoCell.asset.indexPath)
+                refreshIndexPaths.append(photoCell.indexPath)
             }
             
             UIView.performWithoutAnimation {
@@ -642,7 +640,7 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
+                               numberOfItemsInSection section: Int) -> Int {
         
         if isAllowTakePhoto || isAllowCaputreVideo {
             return assets.count + 1
@@ -652,13 +650,14 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                               cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == assets.count && (isAllowTakePhoto || isAllowCaputreVideo ) {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ZDPhotoCameraCell",for: indexPath) as! ZDPhotoCameraCell
             return cell
         }else {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ZDPhotoCell",for: indexPath) as! ZDPhotoCell
+            cell.indexPath = indexPath
             
             //  倒叙排列
             //let index = indexPath.row == 0 ? 0 : assets.count - indexPath.item
@@ -666,19 +665,17 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
             let asset = assets[indexPath.item]
             asset.isSelect = false
             asset.selectNum = 0
-            asset.indexPath = indexPath
             
             //  保证在滑动的过程中 被选中的cell被正确的找到
-            for (index,selectAsset) in selectAssets.enumerated() {
-                if asset.asset == selectAsset.asset {
-                    print("selectAsset: \(selectAsset.asset.localIdentifier), asset: \(asset.asset.localIdentifier)")
-                    
-                    selectAsset.isSelect = true
-                    selectAsset.selectNum = index + 1
-                    
-                    asset.isSelect = true
-                    asset.selectNum = index + 1
-                }
+            for (index,selectAsset) in selectAssets.enumerated() where asset.asset == selectAsset.asset {
+                
+                print("selectAsset: \(selectAsset.asset.localIdentifier), asset: \(asset.asset.localIdentifier)")
+                
+                selectAsset.isSelect = true
+                selectAsset.selectNum = index + 1
+                
+                asset.isSelect = true
+                asset.selectNum = index + 1
             }
             
             cell.asset = asset
@@ -697,6 +694,10 @@ extension ZDPhotoPickerController: UICollectionViewDataSource {
 
 extension ZDPhotoPickerController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        /*
+         最后一个 说明调用摄像头
+         */
+        
         if indexPath.item == assets.count {
             
             //  拦截模拟器
@@ -704,6 +705,7 @@ extension ZDPhotoPickerController: UICollectionViewDelegate {
                 ZDPhotoManager.default.showAlert(controller: self, message: "模拟器无法调用摄像头!")
                 return
             }
+            
             let cameraController = ZDPhotoCameraController()
             cameraController.pickerVC = self
             navigationController?.pushViewController(cameraController, animated: true)
@@ -722,12 +724,10 @@ extension ZDPhotoPickerController: UICollectionViewDelegate {
             //let newIndexPath = IndexPath(item: index, section: 0)
             
             var newIndexPath = IndexPath(item: 0, section: 0)
-            var newAssets: [ZDAssetModel]
+            let newAssets: [ZDAssetModel]
             if cell.asset.type == .photo {
-                for (index, asset) in noVideoAssets.enumerated() {
-                    if asset.asset == cell.asset.asset {
-                        newIndexPath = IndexPath(item: index, section: 0)
-                    }
+                for (index, asset) in noVideoAssets.enumerated() where asset.asset == cell.asset.asset {
+                    newIndexPath = IndexPath(item: index, section: 0)
                 }
                 newAssets = noVideoAssets
             }else {

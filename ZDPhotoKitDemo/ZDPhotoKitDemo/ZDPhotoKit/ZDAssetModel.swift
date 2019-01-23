@@ -36,9 +36,6 @@ public class ZDAssetModel {
     /// 视频时长
     public var timeLength = ""
     
-    /// 被选择的indexPath
-    var indexPath = IndexPath(item: 0, section: 0)
-    
     /// 生成ZDAssetModel模型
     ///
     /// - Parameters:

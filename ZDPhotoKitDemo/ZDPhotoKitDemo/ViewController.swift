@@ -21,7 +21,8 @@ class ViewController: UIViewController {
         
     }
     
-    @objc private func buttonAction() {
+    @objc
+    private func buttonAction() {
         //  首次进来后直接进入第一个相册图片展示页面（相机胶卷）
         let picker = ZDPhotoPickerController()
         picker.isAllowGif = true

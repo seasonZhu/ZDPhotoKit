@@ -14,7 +14,7 @@ class ZDMaskCornerView: UIView {
     
     var cornerRadius: CGFloat = 0.0
     
-    var superBackgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    var fillColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
     
     //MARK:- 重写绘制
     override func draw(_ rect: CGRect) {
@@ -43,7 +43,7 @@ class ZDMaskCornerView: UIView {
         context?.addArc(tangent1End: CGPoint(x: self.bounds.minX, y: self.bounds.minY), tangent2End: CGPoint(x: radius, y: self.bounds.minY), radius: radius)
         context?.closePath()
         
-        context?.setFillColor(superBackgroundColor.cgColor)//设置填充色
+        context?.setFillColor(fillColor.cgColor)//设置填充色
         context?.fillPath(using: .evenOdd)//设置使用奇偶填充的方式
     }
     

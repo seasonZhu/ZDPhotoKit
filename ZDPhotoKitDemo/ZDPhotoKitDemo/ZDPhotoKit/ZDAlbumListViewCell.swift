@@ -68,8 +68,8 @@ class ZDAlbumListViewCell: UITableViewCell {
                 newValue.albumImage = nil
             }
             
-            if newValue.albumImage != nil {
-                photoView.image = newValue.albumImage
+            if let albumImage = newValue.albumImage {
+                photoView.image = albumImage
             }else {
                 ZDPhotoManager.default.getPhoto(asset: newValue.asset ?? PHAsset(), targetSize: CGSize(width: 60, height: 60)) { (image, dict) in
                     self.photoView.image = image
@@ -147,12 +147,7 @@ class ZDAlbumListViewCell: UITableViewCell {
     //MARK:- 重写select方法
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        for subView in contentView.subviews {
-            if subView is UILabel, subView.tag == kSelectedLabel {
-                subView.backgroundColor = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
-            }
-        }
-
+        selectedLabel.backgroundColor = ZDPhotoManager.default.widgetColorCallback?() ?? UIColor.lightGreen
     }
     
     //MARK:- 析构函数

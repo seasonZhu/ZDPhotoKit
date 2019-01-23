@@ -69,7 +69,7 @@ public class ZDPhotoManager {
     /// 是否认证过
     ///
     /// - Parameter callback: 回调
-    func authorizationStatus(callback: @escaping ((Bool) -> Void)) {
+    public func authorizationStatus(callback: @escaping ((Bool) -> Void)) {
         PHPhotoLibrary.requestAuthorization { (status) in
             callback(status == .authorized)
         }
@@ -82,8 +82,8 @@ public class ZDPhotoManager {
     ///   - allowPickingImage: 是否筛选图片
     ///   - callback: 回调
     public func getAllAlbums(allowPickingVideo: Bool,
-                      allowPickingImage: Bool,
-                      callback: @escaping (([ZDAlbumModel]) -> Void)) {
+                             allowPickingImage: Bool,
+                             callback: @escaping (([ZDAlbumModel]) -> Void)) {
         var albums = [ZDAlbumModel]()
         
         //  列出所有系统的智能相册
@@ -193,6 +193,7 @@ public class ZDPhotoManager {
             assets.append(assetModel)
         }
         
+        // 为了保证回调回到主线程,这里使用了GCD
         DispatchQueue.main.async {
             callback(assets)
         }
@@ -257,7 +258,7 @@ public class ZDPhotoManager {
             //  如果iCloud有值,同时result为空 那么需要从iCloud进行下载
             }else if let _ = dict[PHImageResultIsInCloudKey], result == nil {
                 option.isNetworkAccessAllowed = true
-                PHImageManager.default().requestImageData(for: asset, options: option, resultHandler: { (data, dataUTI, orientation, infomation) in
+                PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, infomation) in
                     guard let imageData = data, let iCouldImage = UIImage(data: imageData, scale: 0.05)  else {
                         DispatchQueue.main.async {
                             callback(nil, infomation)
@@ -269,7 +270,7 @@ public class ZDPhotoManager {
                         callback(iCouldImage, infomation)
                     }
 
-                })
+                }
             }else {
                 DispatchQueue.main.async {
                     callback(result, info)
@@ -327,11 +328,11 @@ public class ZDPhotoManager {
             do {
                 let cgImage = try assetImageGenerator.copyCGImage(at: time, actualTime: &actualTime)
                 let image = UIImage(cgImage: cgImage)
-                self.compressVideoOrLivePhoto(asset: avAsset, callback: { (path) in
+                self.compressVideoOrLivePhoto(asset: avAsset) { (path) in
                     DispatchQueue.main.async {
                         callback(path, image)
                     }
-                })
+                }
             }catch let error {
                 print(error)
                 DispatchQueue.main.async {
@@ -429,9 +430,13 @@ public class ZDPhotoManager {
         for model in models {
             if model.type == .photo {
                 PHImageManager.default().requestImageData(for: model.asset, options: imageOption) { (data, dataUTI, orientation, dict) in
-                    if let imageData = data {
-                        dataCount += imageData.count
+                    guard let imageData = data else {
+                        DispatchQueue.main.async {
+                            callback("", 0)
+                        }
+                        return
                     }
+                    dataCount += imageData.count
                     let dataString = self.getBytes(dataCount: dataCount)
                     
                     DispatchQueue.main.async {
@@ -572,7 +577,7 @@ extension ZDPhotoManager {
         if dataCount >= Int(0.1 * 1024 * 1024) {
             bytes = String(format: "%0.1fM",Double(dataCount) / 1024 / 1024.0)
         }else if dataCount >= 1024 {
-            bytes = String(format: "%0.0fK",Double(dataCount)/1024.0)
+            bytes = String(format: "%0.0fK",Double(dataCount) / 1024.0)
         }else {
             bytes = String(format: "%zdB", dataCount)
         }

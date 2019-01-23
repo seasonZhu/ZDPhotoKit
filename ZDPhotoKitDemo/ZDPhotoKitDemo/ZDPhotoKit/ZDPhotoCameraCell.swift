@@ -24,6 +24,16 @@ class ZDPhotoCameraCell: UICollectionViewCell {
     //MARK:- 初始化
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setUpUI()
+        configCamera()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK:- 搭建界面
+    private func setUpUI() {
         let imageView = UIImageView(frame: bounds)
         contentView.addSubview(imageView)
         self.imageView = imageView
@@ -62,39 +72,40 @@ class ZDPhotoCameraCell: UICollectionViewCell {
                                          attribute: .height,
                                          multiplier: 1,
                                          constant: 60))
-        
-        
-        
-        configCamera()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     //MARK:- 配置相机
     private  func configCamera() {
         device = camera(position: .back)
-        guard let device = device else {return}
+        
+        guard let device = device else { return }
         do {
             input = try AVCaptureDeviceInput(device: device)
         }catch {
             return
         }
+        
         session = AVCaptureSession()
-        session!.sessionPreset = AVCaptureSession.Preset.hd1280x720
-        if session!.canAddInput(input!) {
-            session!.addInput(input!)
+        
+        guard let session = session, let input = input else { return }
+        
+        session.sessionPreset = AVCaptureSession.Preset.hd1280x720
+        if session.canAddInput(input) {
+            session.addInput(input)
         }
         
-        videoLayer = AVCaptureVideoPreviewLayer(session: session!)
-        videoLayer.frame = imageView!.bounds
+        videoLayer = AVCaptureVideoPreviewLayer(session: session)
+        videoLayer.frame = bounds
         videoLayer.videoGravity = .resizeAspectFill
         imageView?.layer.addSublayer(videoLayer)
         
-        session?.startRunning()
+        session.startRunning()
     }
     
+    /// 获取摄像头设备
+    ///
+    /// - Parameter position: 摄像头的位置
+    /// - Returns: 设备
     private func camera(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = AVCaptureDevice.devices(for: .video)
         for device in devices where device.position == position  {

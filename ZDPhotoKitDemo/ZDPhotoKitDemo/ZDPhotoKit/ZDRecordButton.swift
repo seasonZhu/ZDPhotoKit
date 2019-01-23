@@ -69,20 +69,21 @@ class ZDRecordButton: UIButton {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         addGestureRecognizer(tap)
         
-        let longTap = UILongPressGestureRecognizer(target: self, action: #selector(longTapAction(_:)))
-        
         //  只有允许拍摄 才添加长按手势
         if ZDPhotoManager.default.isAllowCaputreVideo {
+            let longTap = UILongPressGestureRecognizer(target: self, action: #selector(longTapAction(_:)))
             addGestureRecognizer(longTap)
         }
     }
     
     //MARK:- 手势的点击事件
-    @objc private func tapAction(_ tap: UITapGestureRecognizer) {
+    @objc
+    private func tapAction(_ tap: UITapGestureRecognizer) {
         photoCallback?()
     }
     
-    @objc private func longTapAction(_ longTap: UITapGestureRecognizer) {
+    @objc
+    private func longTapAction(_ longTap: UITapGestureRecognizer) {
         if longTap.state == .began {
             print("长按开始")
             startCallback?()
@@ -96,7 +97,8 @@ class ZDRecordButton: UIButton {
     }
     
     //MARK:- 定时器方法
-    @objc private func startProgress() {
+    @objc
+    private func startProgress() {
         if second > maxSecond {
             finishCallback?(second)
             reset()

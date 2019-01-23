@@ -104,7 +104,6 @@ extension ZDAlbumListView: UITableViewDataSource {
         let model = items[indexPath.row]
         model.selectAssets = selectAssets
         cell.model = model
-        //cell.selectAssets = selectAssets
         return cell
     }
 }

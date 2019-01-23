@@ -16,8 +16,8 @@ class ZDPhotoBrowserController: UIViewController {
     ///  返回闭包
     var selectAssetsCallback: (([ZDAssetModel], Set<ZDAssetType>, Bool) -> ())?
     
-    ///  pickerVC
-    var pickerVC = ZDPhotoPickerController()
+    ///  pickerVC,一定要对其进行赋值
+    var pickerVC: ZDPhotoPickerController!
     
     ///  是否是原图
     private var isSelected: Bool
@@ -26,7 +26,7 @@ class ZDPhotoBrowserController: UIViewController {
     private var assets: [ZDAssetModel]
     
     ///  默认显示的图片索引
-    private var indexPath: IndexPath
+    private let indexPath: IndexPath
     
     ///  被选择过的模型数组
     private var selectAssets: [ZDAssetModel]
@@ -203,10 +203,6 @@ class ZDPhotoBrowserController: UIViewController {
         view.backgroundColor = UIColor.black
         navigationController?.navigationBar.isHidden = true
         
-        //  设置modal的展现方式
-        //modalPresentationStyle = .custom
-        //modalTransitionStyle = .crossDissolve
-        
         //  collectionView
         view.addSubview(collectionView)
         
@@ -241,52 +237,51 @@ class ZDPhotoBrowserController: UIViewController {
         
         naviBar.rightButtonCallback = { [weak self] rightbutton in
             rightbutton.isSelected = !rightbutton.isSelected
+            guard let strongSelf = self else { return }
             
-            let asset = self?.assets[rightbutton.tag] ?? ZDAssetModel()
-            if rightbutton.isSelected /*&& !(self?.selectIndexPaths.contains(indexPath))!*/ {
-                if self?.selectAssets.count ?? ZDPhotoManager.default.maxSelected >= ZDPhotoManager.default.maxSelected {
+            let asset = strongSelf.assets[rightbutton.tag]
+            if rightbutton.isSelected  {
+                if strongSelf.selectAssets.count >= ZDPhotoManager.default.maxSelected {
                     rightbutton.isSelected = false
                     
                     if ZDPhotoManager.default.isAllowCropper {
-                        ZDPhotoManager.default.showAlert(controller: self!, message: "剪裁图片只能选择1张照片!")
+                        ZDPhotoManager.default.showAlert(controller: strongSelf, message: "剪裁图片只能选择1张照片!")
                     }else {
-                        ZDPhotoManager.default.showAlert(controller: self!)
+                        ZDPhotoManager.default.showAlert(controller: strongSelf)
                     }
                     
                     return
                 }
                 
                 //  添加到数组中
-                self?.selectAssets.append(asset)
+                strongSelf.selectAssets.append(asset)
                 
                 //  添加类型
-                if let count = self?.selectAssets.count, count > 0 {
-                    self?.assetTypeSet.insert(asset.type)
-                }
+                strongSelf.assetTypeSet.insert(asset.type)
                 
                 //  播放动画
-                self?.playAnimation()
+                strongSelf.playAnimation()
                 
             }else {
                 //  从数组中移除
-                self?.selectAssets.removeZDAssetModel(asset)
+                strongSelf.selectAssets.removeZDAssetModel(asset)
                 
                 //  移除类型类型
-                if let count = self?.selectAssets.count, count == 0 {
-                    self?.assetTypeSet.removeAll()
+                if strongSelf.selectAssets.count == 0 {
+                    strongSelf.assetTypeSet.removeAll()
                 }
             }
             
             asset.isSelect = rightbutton.isSelected
             
-            self?.imageCompleteButton.number = self?.selectAssets.count ?? 0
+            strongSelf.imageCompleteButton.number = strongSelf.selectAssets.count
             
             //  如果显示选择序列 那么刷新选择数字
-            if ZDPhotoManager.default.isShowSelectCount, let selectAssets = self?.selectAssets {
-                for (index, selectAsset) in selectAssets.enumerated() {
+            if ZDPhotoManager.default.isShowSelectCount {
+                for (index, selectAsset) in strongSelf.selectAssets.enumerated() {
                     selectAsset.selectNum = index + 1
                     if selectAsset.asset == asset.asset {
-                        self?.naviBar.rightButton.setTitle("\(selectAsset.selectNum)", for: .selected)
+                        strongSelf.naviBar.rightButton.setTitle("\(selectAsset.selectNum)", for: .selected)
                     }
                 }
             }
@@ -297,9 +292,12 @@ class ZDPhotoBrowserController: UIViewController {
     //MARK:- 点击事件
     
     //  返回事件
-    @objc private func backAction() {
+    @objc
+    private func backAction() {
         
-        if let viewControllers = navigationController?.viewControllers, let count = navigationController?.viewControllers.count, count > 1, viewControllers[count - 1] == self {
+        if let viewControllers = navigationController?.viewControllers,
+            let count = navigationController?.viewControllers.count, count > 1,
+            viewControllers[count - 1] == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)
@@ -309,7 +307,8 @@ class ZDPhotoBrowserController: UIViewController {
     }
     
     //  下载按钮的点击事件
-    @objc private func downloadAction(_ button: UIButton) {
+    @objc
+    private func downloadAction(_ button: UIButton) {
         
         ZDPhotoManager.default.getPhoto(asset: asset.asset, targetSize: CGSize(width: asset.pixW, height: asset.pixH)) { (image, info) in
             
@@ -332,14 +331,16 @@ class ZDPhotoBrowserController: UIViewController {
     }
     
     //  点击了完成按钮
-    @objc private func selectImageComplete() {
+    @objc
+    private func selectImageComplete() {
         print("从完成按钮这里进行点击事件")
         dismiss(animated: true)
-        pickerVC.selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
+        pickerVC?.selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
     }
     
     //MARK:- 原图按钮的点击事件
-    @objc private func originalImageButtonAction(_ button: UIButton) {
+    @objc
+    private func originalImageButtonAction(_ button: UIButton) {
         button.isSelected = !button.isSelected
     }
     
@@ -408,13 +409,13 @@ extension ZDPhotoBrowserController: UICollectionViewDelegate, UICollectionViewDa
             naviBar.setTitle("\(indexPath.item + 1)/\(assets.count)")
             
             //  设置导航栏的选择按钮
-            naviBar.rightButton.isSelected = selectAssets.contains(where: { [weak self] (selectAsset) -> Bool in
+            naviBar.rightButton.isSelected = selectAssets.contains { [weak self] (selectAsset) -> Bool in
                 let isSame = selectAsset.asset == cell.asset.asset
                 if isSame && ZDPhotoManager.default.isShowSelectCount {
                     self?.naviBar.rightButton.setTitle("\(selectAsset.selectNum)", for: .selected)
                 }
                 return isSame
-            })
+            }
             naviBar.rightButton.tag = indexPath.item
             
             //  获取当前图片的大小

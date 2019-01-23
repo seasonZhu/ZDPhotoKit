@@ -12,11 +12,11 @@ import UIKit
 class ZDPhotoNaviBar: UIView {
 
     //MARK:- 属性设置
-    var backButton: UIButton
+    let backButton: UIButton
     
-    var rightButton: UIButton
+    let rightButton: UIButton
     
-    var titleButton: ZDPhotoTitleButton
+    let titleButton: ZDPhotoTitleButton
     
     var backButtonCallback: ((UIButton) -> Void)?
     
@@ -26,6 +26,7 @@ class ZDPhotoNaviBar: UIView {
     
     //MARK:- 初始化
     override init(frame: CGRect) {
+        
         let height: CGFloat = 33
         let top = frame.height - height
         let backButton = UIButton(frame: CGRect(x: 0, y: top, width: 70, height: height))
@@ -66,15 +67,18 @@ class ZDPhotoNaviBar: UIView {
     }
     
     //MARK:- 按钮的点击事件
-    @objc private func backButtonAction(_ button: UIButton) {
+    @objc
+    private func backButtonAction(_ button: UIButton) {
         backButtonCallback?(button)
     }
     
-    @objc private func rightButtonAction(_ button: UIButton) {
+    @objc
+    private func rightButtonAction(_ button: UIButton) {
         rightButtonCallback?(button)
     }
     
-    @objc private func titleButtonAction(_ button: ZDPhotoTitleButton) {
+    @objc
+    private func titleButtonAction(_ button: ZDPhotoTitleButton) {
         titleButtonCallback?(button)
     }
     
@@ -82,7 +86,6 @@ class ZDPhotoNaviBar: UIView {
     //MARK:- 对外方法
     func setTitle(_ title: String) {
         titleButton.setTitle(title, for: .normal)
-        //titleButton.setImage(nil, for: .normal)
     }
     
     func setRightButtonImage(_ imageName: String) {

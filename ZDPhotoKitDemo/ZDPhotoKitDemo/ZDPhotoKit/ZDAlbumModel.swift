@@ -32,11 +32,11 @@ public  class ZDAlbumModel {
         didSet {
             var selectCount = 0
             for selectAsset in selectAssets {
-                result.enumerateObjects({ (asset, index, _) in
+                result.enumerateObjects { (asset, index, _) in
                     if selectAsset.asset == asset {
                         selectCount += 1
                     }
-                })
+                }
             }
             self.selectCount = selectCount
         }

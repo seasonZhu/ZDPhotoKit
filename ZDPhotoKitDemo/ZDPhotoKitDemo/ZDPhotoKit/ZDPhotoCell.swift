@@ -14,7 +14,6 @@ import PhotosUI
 class ZDPhotoCell: UICollectionViewCell {
     
     //MARK:- 属性设置
-    var onlyRefreshSelectNum: Bool = false
     
     //  懒加载一般的imageView
     private lazy var imageView: UIImageView = {
@@ -40,10 +39,11 @@ class ZDPhotoCell: UICollectionViewCell {
         let button = UIButton()
         if ZDPhotoManager.default.isShowSelectCount {
             button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-            button.setBackgroundImage(UIImage(namedInBundle: "image_not_selected"), for: .normal)
-            
             button.setTitleColor(.white, for: .selected)
+            
+            button.setBackgroundImage(UIImage(namedInBundle: "image_not_selected"), for: .normal)
             button.setBackgroundImage(UIImage(namedInBundle: "photo_original_select"), for: .selected)
+
         }else {
             button.setImage(UIImage(namedInBundle: "image_not_selected"), for: .normal)
             button.setImage(UIImage(namedInBundle: "image_selected"), for: .selected)
@@ -55,7 +55,7 @@ class ZDPhotoCell: UICollectionViewCell {
     //  左上角 显示是GIF图 还是 Live图片 还是普通的图片 还是视频
     private lazy var upLeftStatusIcon = UIImageView()
     
-    //  右下角
+    //  右下角 视频显示视频的时长
     private lazy var bottomRightTimeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -85,7 +85,7 @@ class ZDPhotoCell: UICollectionViewCell {
             }
             
             //  右下角设置
-            bottomRightTimeLabel.text = getVideoTime(duration: newValue.timeLength)
+            bottomRightTimeLabel.text = newValue.timeLength.isEmpty ? nil : getVideoTime(duration: newValue.timeLength)
             bottomRightTimeLabel.isHidden = (newValue.type != .video)
             
             //  左上角设置
@@ -98,25 +98,21 @@ class ZDPhotoCell: UICollectionViewCell {
             }else if newValue.type == .video {
                 upLeftStatusIcon.image = UIImage(namedInBundle: "photo_mark_video")
             }else if newValue.type == .photo {
-                
+                // 什么也不干,因为已经设置为nil了
             }
             
             //  对内容进行设置
             
             //  移除手势
             if let gestures = imageView.gestureRecognizers {
-                for gesture in gestures {
-                    if gesture is UILongPressGestureRecognizer {
-                        imageView.removeGestureRecognizer(gesture)
-                    }
+                for gesture in gestures where gesture is UILongPressGestureRecognizer {
+                    imageView.removeGestureRecognizer(gesture)
                 }
             }
             
             if let gestures = livePhoteView.gestureRecognizers {
-                for gesture in gestures {
-                    if gesture is UILongPressGestureRecognizer {
-                        livePhoteView.removeGestureRecognizer(gesture)
-                    }
+                for gesture in gestures where gesture is UILongPressGestureRecognizer {
+                    livePhoteView.removeGestureRecognizer(gesture)
                 }
             }
             
@@ -166,14 +162,11 @@ class ZDPhotoCell: UICollectionViewCell {
         }
     }
     
-    //  gifImage
-    private var gifImage: UIImage?
-    
-    //  gifData
-    private var gifData: Data?
-    
     //  点击选择按钮的回调
     var selectCallback: ((_ isSelected: Bool) -> Void)?
+    
+    //  被选择的indexPath
+    var indexPath = IndexPath(item: 0, section: 0)
     
     //MARK: 初始化
     override init(frame: CGRect) {
@@ -375,7 +368,8 @@ class ZDPhotoCell: UICollectionViewCell {
     /// 长按展示LivePhoto
     ///
     /// - Parameter longPress: 长按手势
-    @objc private func livePhotoStart(_ longPress: UILongPressGestureRecognizer) {
+    @objc
+    private func livePhotoStart(_ longPress: UILongPressGestureRecognizer) {
         if longPress.state == .began {
             livePhoteView.startPlayback(with: .full)
         }else if longPress.state == .ended {
@@ -386,7 +380,8 @@ class ZDPhotoCell: UICollectionViewCell {
     /// 长按展示gif
     ///
     /// - Parameter longPress: 长按手势
-    @objc private func gifStart(_ longPress: UILongPressGestureRecognizer) {
+    @objc
+    private func gifStart(_ longPress: UILongPressGestureRecognizer) {
         
         //  不使用全局的变量 这样用完了就销毁 内存消耗更少
         
@@ -404,7 +399,8 @@ class ZDPhotoCell: UICollectionViewCell {
     /// 选择按钮的点击事件
     ///
     /// - Parameter button: 按钮
-    @objc private func selectCellButtonAction(_ button: UIButton) {
+    @objc
+    private func selectCellButtonAction(_ button: UIButton) {
         button.isSelected = !button.isSelected
         playAnimation()
         selectCallback?(button.isSelected)

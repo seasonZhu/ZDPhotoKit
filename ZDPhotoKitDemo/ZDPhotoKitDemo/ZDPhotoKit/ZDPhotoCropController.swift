@@ -13,8 +13,8 @@ class ZDPhotoCropController: UIViewController {
     
     //MARK:- 属性设置
     
-    /// pickerVC
-    var pickerVC = ZDPhotoPickerController()
+    /// pickerVC, 一定要对其进行赋值
+    var pickerVC: ZDPhotoPickerController!
     
     /// 自定义导航栏
     private lazy var naviBar: ZDPhotoNaviBar = {
@@ -48,7 +48,7 @@ class ZDPhotoCropController: UIViewController {
     private lazy var ratioView = UIView()
     
     /// 原始图片
-    private lazy var originalImage: UIImage = UIImage()
+    private lazy var originalImage = UIImage()
     
     /// 剪裁的Frame
     private var cropFrame: CGRect
@@ -207,7 +207,8 @@ class ZDPhotoCropController: UIViewController {
     //MARK:- 点击事件
     
     //  返回事件
-    @objc private func backAction() {
+    @objc
+    private func backAction() {
         
         if let viewControllers = navigationController?.viewControllers, let count = navigationController?.viewControllers.count, count > 1, viewControllers[count - 1] == self {
             navigationController?.popViewController(animated: true)
@@ -217,7 +218,8 @@ class ZDPhotoCropController: UIViewController {
     }
     
     //  捏合手势
-    @objc private func pinchAction(_ pinch: UIPinchGestureRecognizer) {
+    @objc
+    private func pinchAction(_ pinch: UIPinchGestureRecognizer) {
         let imageView = showImageView
         if pinch.state == .began || pinch.state == .changed {
             imageView.transform = imageView.transform.scaledBy(x: pinch.scale, y: pinch.scale)
@@ -234,7 +236,8 @@ class ZDPhotoCropController: UIViewController {
     }
     
     //  滑动手势
-    @objc private func panAction(_ pan: UIPanGestureRecognizer) {
+    @objc
+    private func panAction(_ pan: UIPanGestureRecognizer) {
         let imageView = showImageView
         if pan.state == .began || pan.state == .changed {
             let absCenterX = cropFrame.midX
@@ -315,11 +318,16 @@ class ZDPhotoCropController: UIViewController {
         guard let subImageRef = imageRef?.cropping(to: myImageRect) else { return nil }
         
         let size = CGSize(width: myImageRect.size.width, height: myImageRect.size.height)
-        UIGraphicsBeginImageContext(size);
+        
+        UIGraphicsBeginImageContext(size)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        
         let context = UIGraphicsGetCurrentContext()
         context?.draw(subImageRef, in: myImageRect)
         let smallImage = UIImage(cgImage: subImageRef)
-        UIGraphicsEndImageContext()
+        
         return smallImage
     }
 

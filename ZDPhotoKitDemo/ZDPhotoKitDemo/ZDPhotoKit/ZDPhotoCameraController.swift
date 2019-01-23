@@ -22,8 +22,8 @@ class ZDPhotoCameraController: UIViewController {
     ///  视频路径
     var videoPathCallback: ((_ path: String) -> Void)?
     
-    ///  pickerVC
-    var pickerVC = ZDPhotoPickerController()
+    ///  pickerVC,一定要对其进行赋值
+    var pickerVC: ZDPhotoPickerController!
     
     ///  对内的私有方法
     
@@ -350,9 +350,12 @@ class ZDPhotoCameraController: UIViewController {
     //MARK:- 按钮的点击事件
     
     //  返回事件
-    @objc private func backAction() {
+    @objc
+    private func backAction() {
         
-        if let viewControllers = navigationController?.viewControllers, let count = navigationController?.viewControllers.count, count > 1, viewControllers[count - 1] == self {
+        if let viewControllers = navigationController?.viewControllers,
+            let count = navigationController?.viewControllers.count, count > 1,
+            viewControllers[count - 1] == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)
@@ -360,7 +363,8 @@ class ZDPhotoCameraController: UIViewController {
     }
     
     //  正方形按钮点击事件
-    @objc private func squareButtonAction(_ button: UIButton) {
+    @objc
+    private func squareButtonAction(_ button: UIButton) {
         if button.isSelected { return }
         button.isSelected = !button.isSelected
         rectangleButton.isSelected = !rectangleButton.isSelected
@@ -368,7 +372,8 @@ class ZDPhotoCameraController: UIViewController {
     }
     
     //  长方形按钮点击事件
-    @objc private func rectangleButtonAction(_ button: UIButton) {
+    @objc
+    private func rectangleButtonAction(_ button: UIButton) {
         if button.isSelected { return }
         button.isSelected = !button.isSelected
         squareButton.isSelected = !squareButton.isSelected
@@ -376,7 +381,8 @@ class ZDPhotoCameraController: UIViewController {
     }
     
     //  删除按钮点击事件
-    @objc private func deleteButtonAction(_ button: UIButton) {
+    @objc
+    private func deleteButtonAction(_ button: UIButton) {
         recordButton.reset()
         squareButton.isHidden = false
         rectangleButton.isHidden = false
@@ -403,7 +409,8 @@ class ZDPhotoCameraController: UIViewController {
     }
     
     //  下一步按钮的点击事件,回调
-    @objc private func nextButtonAction(_ button: UIButton) {
+    @objc
+    private func nextButtonAction(_ button: UIButton) {
         if isTakePhoto {
             pickerVC.takePhotoCallback?(finalPhoto)
         }else {
@@ -412,7 +419,7 @@ class ZDPhotoCameraController: UIViewController {
                 let image = UIImage.getFirstPicture(frome: self.videoUrl.absoluteString)
                 self.pickerVC.takeVideoCallback?(image, self.videoUrl.absoluteString)
             }, fail: {
-                
+                print("压缩视频失败")
             })
         }
         
@@ -420,7 +427,8 @@ class ZDPhotoCameraController: UIViewController {
     }
     
     //MARK:- 手势的点击事件
-    @objc private func maskViewAction(_ tap: UITapGestureRecognizer) {
+    @objc
+    private func maskViewAction(_ tap: UITapGestureRecognizer) {
         let point = tap.location(in: maskView)
         focus(point: point)
     }
@@ -555,7 +563,8 @@ class ZDPhotoCameraController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(playTheVideoEnd), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
-    @objc private func playTheVideoEnd() {
+    @objc
+    private func playTheVideoEnd() {
         if player != nil {
             player.seek(to: CMTime.zero)
             player.play()
@@ -627,7 +636,8 @@ extension ZDPhotoCameraController {
     }
     
     /// 切换前后摄像头
-    @objc private func changeCamera() {
+    @objc
+    private func changeCamera() {
         let cameraCount = AVCaptureDevice.devices(for: .video).count
         //  只有保证大于1个摄像头才能进行切换
         if cameraCount > 1 {
@@ -685,7 +695,8 @@ extension ZDPhotoCameraController: AVCaptureFileOutputRecordingDelegate {
         playTheVideo()
     }
     
-    @objc private func videoTimeChange() {
+    @objc
+    private func videoTimeChange() {
         videoLenght += 0.2
         if videoLenght >= 30 {
             videoOutput.stopRecording()

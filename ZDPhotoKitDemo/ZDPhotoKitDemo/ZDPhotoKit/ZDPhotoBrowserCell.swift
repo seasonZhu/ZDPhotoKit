@@ -104,14 +104,9 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
         //  声明点击事件需要双击事件检测失败后才会执行
         tapSingle.require(toFail: tapDouble)
         
+        //  不需要对每个图层都进行手势添加 imageView livePhotoView,只需要添加contentView即可
         contentView.addGestureRecognizer(tapSingle)
         contentView.addGestureRecognizer(tapDouble)
-        
-//        imageView.addGestureRecognizer(tapSingle)
-//        imageView.addGestureRecognizer(tapDouble)
-//
-//        livePhoteView.addGestureRecognizer(tapSingle)
-//        livePhoteView.addGestureRecognizer(tapDouble)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -157,21 +152,23 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
     }
     
     //  图片单击事件响应
-    @objc private func tapSingleDid(_ tap: UITapGestureRecognizer) {
+    @objc
+    private func tapSingleDid(_ tap: UITapGestureRecognizer) {
         dismissCallback?()
     }
     
     //  图片双击事件响应
-    @objc private func tapDoubleDid(_ tap: UITapGestureRecognizer){
+    @objc
+    private func tapDoubleDid(_ tap: UITapGestureRecognizer){
         //  缩放视图（带有动画效果）
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.5) {
             //如果当前不缩放，则放大到3倍。否则就还原
             if self.scrollView.zoomScale == 1.0 {
                 self.scrollView.zoomScale = 3.0
             }else{
                 self.scrollView.zoomScale = 1.0
             }
-        })
+        }
     }
     
     /// 设置GIF/LivePhoto/Video的播放
@@ -181,18 +178,14 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
         
         //  移除手势
         if let gestures = imageView.gestureRecognizers {
-            for gesture in gestures {
-                if gesture is UILongPressGestureRecognizer {
-                    imageView.removeGestureRecognizer(gesture)
-                }
+            for gesture in gestures where gesture is UILongPressGestureRecognizer {
+                imageView.removeGestureRecognizer(gesture)
             }
         }
         
         if let gestures = livePhoteView.gestureRecognizers {
-            for gesture in gestures {
-                if gesture is UILongPressGestureRecognizer {
-                    livePhoteView.removeGestureRecognizer(gesture)
-                }
+            for gesture in gestures where gesture is UILongPressGestureRecognizer {
+                livePhoteView.removeGestureRecognizer(gesture)
             }
         }
         
@@ -265,7 +258,8 @@ class ZDPhotoBrowserCell: UICollectionViewCell {
     /// 长按展示LivePhoto
     ///
     /// - Parameter longPress: 长按手势
-    @objc private func livePhotoStart(_ longPress: UILongPressGestureRecognizer) {
+    @objc
+    private func livePhotoStart(_ longPress: UILongPressGestureRecognizer) {
         if longPress.state == .began {
             livePhoteView.startPlayback(with: .hint)
         }else if longPress.state == .ended {
