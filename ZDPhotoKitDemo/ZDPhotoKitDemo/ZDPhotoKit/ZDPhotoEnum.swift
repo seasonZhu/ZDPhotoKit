@@ -12,7 +12,7 @@ import Photos
 /// 多媒体的两大类
 ///
 /// - photo: 相片
-/// - video: 相片
+/// - video: 视频
 public enum ZDAssetType {
     case photo
     case video

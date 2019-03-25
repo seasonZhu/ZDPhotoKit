@@ -208,6 +208,23 @@ public class ZDPhotoPickerController: UIViewController {
         return albumView
     }()
     
+    ///  设置权限的按钮
+    private lazy var settingButton: UIButton = {
+        let title = "没有照片访问权限，请前往\"设置-隐私-照片\"选项中，允许访问照片!"
+        let width = ZDConstant.kScreenWidth - 20
+        let height = title.boundingRect(with: CGSize(width: width, height: CGFloat(Int.max)), options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [:], context: nil).height
+        let button = UIButton()
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.textAlignment = .center
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor.main, for: .normal)
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(settingAction), for: .touchUpInside)
+        button.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        button.center = view.center
+        return button
+    }()
+    
     /// 资源模型数组
     private lazy var assets = [ZDAssetModel]()
     
@@ -227,10 +244,21 @@ public class ZDPhotoPickerController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        resetCachedAssets()
-        onInitData()
-        setUpUI()
-        onInitEvent()
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { (authorization) in
+                if authorization == .authorized {
+                    DispatchQueue.main.async {
+                        self.authorizedInit()
+                    }
+                }
+            }
+        case .denied, .restricted:
+            notAuthorizedInit()
+        case .authorized:
+            authorizedInit()
+        }
     }
     
     //MARK:- viewWillAppear
@@ -258,6 +286,24 @@ public class ZDPhotoPickerController: UIViewController {
         PHCachingImageManager().stopCachingImagesForAllAssets()
     }
     
+    /// 非权限的认证的界面初始化
+    private func notAuthorizedInit() {
+        view.backgroundColor = UIColor.white
+        navigationController?.navigationBar.isHidden = true
+        view.addSubview(naviBar)
+        view.bringSubviewToFront(naviBar)
+        view.addSubview(settingButton)
+        settingButton.isHidden = false
+    }
+    
+    /// 权限的认证的界面初始化
+    private func authorizedInit() {
+        resetCachedAssets()
+        onInitData()
+        setUpUI()
+        onInitEvent()
+    }
+    
     //MARK:- 搭建界面
     private func setUpUI() {
         view.backgroundColor = UIColor.white
@@ -269,6 +315,7 @@ public class ZDPhotoPickerController: UIViewController {
         view.addSubview(albumView)
         view.addSubview(naviBar)
         view.bringSubviewToFront(naviBar)
+        settingButton.isHidden = true
     }
     
     //MARK:- 初始化数据
@@ -336,20 +383,22 @@ public class ZDPhotoPickerController: UIViewController {
     
     //MARK:- 点击事件
     
+    //  设置事件
+    @objc
+    private func settingAction() {
+        guard let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) else {
+            return
+        }
+        UIApplication.shared.openURL(url)
+    }
+    
     //  返回事件
     @objc
     private func backAction() {
         
         //  不知道为啥 这个相册在dissmiss的时候回在最顶层 然后再消失 这里先隐藏处理
         albumView.isHidden = true
-        
-        if let viewControllers = navigationController?.viewControllers,
-            let count = navigationController?.viewControllers.count, count > 1,
-            viewControllers[count - 1] == self {
-            navigationController?.popViewController(animated: true)
-        } else {
-            dismiss(animated: true)
-        }
+        popOrDismissAction()
     }
     
     //  点击了完成按钮
@@ -357,7 +406,18 @@ public class ZDPhotoPickerController: UIViewController {
     private func selectImageComplete() {
         print("从完成按钮这里进行点击事件")
         selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
-        dismiss(animated: true)
+        popOrDismissAction()
+    }
+    
+    /// 判断是pop还是dismiss行为
+    private func popOrDismissAction() {
+        if let viewControllers = navigationController?.viewControllers,
+            let count = navigationController?.viewControllers.count, count > 1,
+            viewControllers[count - 1] == self {
+            navigationController?.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
     
     //  相薄的背景点击事件

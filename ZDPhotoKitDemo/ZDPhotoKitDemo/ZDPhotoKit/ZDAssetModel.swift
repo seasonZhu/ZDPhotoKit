@@ -13,7 +13,29 @@ import Photos
 public class ZDAssetModel {
     
     /// 图片资源
-    public var asset = PHAsset()
+    public var asset = PHAsset() {
+        didSet {
+            let option = PHImageRequestOptions()
+            option.resizeMode = .fast
+            option.isNetworkAccessAllowed = true
+            
+            PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, infomation) in
+                guard let imageData = data, let url = infomation?["PHImageFileURLKey"] as? URL  else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.image = UIImage(data: imageData)
+                    self.imageURL = url
+                }
+            }
+        }
+    }
+    
+    /// 图片
+    public var image: UIImage?
+    
+    /// 图片沙盒地址
+    public var imageURL: URL?
     
     /// 资源类型
     public var type: ZDAssetType = .photo
