@@ -243,22 +243,7 @@ public class ZDPhotoPickerController: UIViewController {
     //MARK:- viewDidLoad
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
-        let status = PHPhotoLibrary.authorizationStatus()
-        switch status {
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { (authorization) in
-                if authorization == .authorized {
-                    DispatchQueue.main.async {
-                        self.authorizedInit()
-                    }
-                }
-            }
-        case .denied, .restricted:
-            notAuthorizedInit()
-        case .authorized:
-            authorizedInit()
-        }
+        layoutSubviewsByPHPhotoLibraryAuthorizationStatus()
     }
     
     //MARK:- viewWillAppear
@@ -284,6 +269,25 @@ public class ZDPhotoPickerController: UIViewController {
     //MARK:- 缓存重置
     private func resetCachedAssets() {
         PHCachingImageManager().stopCachingImagesForAllAssets()
+    }
+    
+    /// 通过照片管理权限进行布局
+    private func layoutSubviewsByPHPhotoLibraryAuthorizationStatus() {
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { (authorization) in
+                if authorization == .authorized {
+                    DispatchQueue.main.async {
+                        self.authorizedInit()
+                    }
+                }
+            }
+        case .denied, .restricted:
+            notAuthorizedInit()
+        case .authorized:
+            authorizedInit()
+        }
     }
     
     /// 非权限的认证的界面初始化
