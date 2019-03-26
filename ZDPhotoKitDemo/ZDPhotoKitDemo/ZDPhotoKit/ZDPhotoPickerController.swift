@@ -342,6 +342,7 @@ public class ZDPhotoPickerController: UIViewController {
         manager.widgetColorCallback = widgetColorCallback
         manager.pickerVC = self
         maxSelected = isAllowCropper ? 1 : maxSelected
+        manager.maxSelected = maxSelected
         
         //  判断是否授权
         ZDPhotoManager.default.authorizationStatus { (isOK) in
@@ -415,9 +416,7 @@ public class ZDPhotoPickerController: UIViewController {
     
     /// 判断是pop还是dismiss行为
     private func popOrDismissAction() {
-        if let viewControllers = navigationController?.viewControllers,
-            let count = navigationController?.viewControllers.count, count > 1,
-            viewControllers[count - 1] == self {
+        if let viewControllers = navigationController?.viewControllers, viewControllers.count > 1, viewControllers.last == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)

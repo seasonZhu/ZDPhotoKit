@@ -350,9 +350,7 @@ class ZDPhotoCameraController: UIViewController {
     @objc
     private func backAction() {
         
-        if let viewControllers = navigationController?.viewControllers,
-            let count = navigationController?.viewControllers.count, count > 1,
-            viewControllers[count - 1] == self {
+        if let viewControllers = navigationController?.viewControllers, viewControllers.count > 1, viewControllers.last == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)
@@ -421,7 +419,12 @@ class ZDPhotoCameraController: UIViewController {
             })
         }
         
-        dismiss(animated: true)
+        if navigationController?.viewControllers.last == self,
+            let vc = navigationController?.viewControllers.first, vc != self, vc != ZDPhotoManager.default.pickerVC{
+            navigationController?.popToViewController(vc, animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
     
     //MARK:- 手势的点击事件

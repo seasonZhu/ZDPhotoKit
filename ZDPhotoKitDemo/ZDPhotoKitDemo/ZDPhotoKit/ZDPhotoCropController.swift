@@ -132,8 +132,18 @@ class ZDPhotoCropController: UIViewController {
         }
         
         naviBar.rightButtonCallback = { [weak self] rightbutton in
-            self?.dismiss(animated: true)
             ZDPhotoManager.default.pickerVC?.selectCropImageCallback?(self?.getCropImage())
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if strongSelf.navigationController?.viewControllers.last == self,
+                let vc = strongSelf.navigationController?.viewControllers.first, vc != self, vc != ZDPhotoManager.default.pickerVC {
+                self?.navigationController?.popToViewController(vc, animated: true)
+            } else {
+                self?.dismiss(animated: true)
+            }
         }
     }
     
@@ -213,7 +223,7 @@ class ZDPhotoCropController: UIViewController {
     @objc
     private func backAction() {
         
-        if let viewControllers = navigationController?.viewControllers, let count = navigationController?.viewControllers.count, count > 1, viewControllers[count - 1] == self {
+        if let viewControllers = navigationController?.viewControllers, viewControllers.count > 1, viewControllers.last == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)

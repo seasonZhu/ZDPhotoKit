@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "ZDPhotoKitDemo"
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 22))
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         button.setTitle("进入相册", for: .normal)
@@ -43,8 +44,9 @@ class ViewController: UIViewController {
 //            return UIColor.black
 //        }
         
-        let navi = UINavigationController(rootViewController: picker)
-        present(navi, animated: true, completion: nil)
+//        let navi = UINavigationController(rootViewController: picker)
+//        present(navi, animated: true, completion: nil)
+        navigationController?.pushViewController(picker, animated: true)
         
         //  选择资源的回调
         picker.selectAssetsCallback = { selectAssets, assetTypeSet, isOriginal in

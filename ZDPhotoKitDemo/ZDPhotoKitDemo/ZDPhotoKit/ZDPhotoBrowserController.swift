@@ -276,23 +276,27 @@ class ZDPhotoBrowserController: UIViewController {
     @objc
     private func backAction() {
         
-        if let viewControllers = navigationController?.viewControllers,
-            let count = navigationController?.viewControllers.count, count > 1,
-            viewControllers[count - 1] == self {
+        selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
+        
+        if let viewControllers = navigationController?.viewControllers, viewControllers.count > 1, viewControllers.last == self {
             navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true)
         }
-        
-        selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
     }
     
     //  点击了完成按钮
     @objc
     private func selectImageComplete() {
         print("从完成按钮这里进行点击事件")
-        dismiss(animated: true)
         ZDPhotoManager.default.pickerVC?.selectAssetsCallback?(selectAssets, assetTypeSet, originalImageButton.isSelected)
+        
+        if navigationController?.viewControllers.last == self,
+            let vc = navigationController?.viewControllers.first, vc != self, vc != ZDPhotoManager.default.pickerVC {
+            navigationController?.popToViewController(vc, animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
     
     //MARK:- 原图按钮的点击事件
