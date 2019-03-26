@@ -13,23 +13,7 @@ import Photos
 public class ZDAssetModel {
     
     /// 图片资源
-    public var asset = PHAsset() {
-        didSet {
-            let option = PHImageRequestOptions()
-            option.resizeMode = .fast
-            option.isNetworkAccessAllowed = true
-            
-            PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, infomation) in
-                guard let imageData = data, let url = infomation?["PHImageFileURLKey"] as? URL  else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.image = UIImage(data: imageData)
-                    self.imageURL = url
-                }
-            }
-        }
-    }
+    public var asset = PHAsset()
     
     /// 图片
     public var image: UIImage?
@@ -50,7 +34,25 @@ public class ZDAssetModel {
     public var pixH: Int = 0
     
     /// 是否被选中
-    public var isSelect = false
+    public var isSelect = false {
+        didSet {
+            if isSelect {
+                let option = PHImageRequestOptions()
+                option.resizeMode = .fast
+                option.isNetworkAccessAllowed = true
+                
+                PHImageManager.default().requestImageData(for: asset, options: option) { (data, dataUTI, orientation, infomation) in
+                    guard let imageData = data, let url = infomation?["PHImageFileURLKey"] as? URL  else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self.image = UIImage(data: imageData)
+                        self.imageURL = url
+                    }
+                }
+            }
+        }
+    }
     
     /// 被选择的序列
     public var selectNum = 0
